@@ -1,0 +1,6 @@
+# experiments
+
+실험 코드. 스크립트 하나 = 질문 하나. 파일명에 날짜와 질문을 붙인다 (예: `20260916_native_scale.py`).
+실행 출력은 `results/` 에 날짜 붙여 그대로 둔다. 요약은 `docs/02_facts.md` 로.
+
+현재 측정 엔진(YOLO ROI + OpenCV 엣지)은 희연님 저장소(`Shaft_OD_Measurement`)의 것을 쓴다. 이 저장소에는 그 위에 얹은 실험 스크립트만 둔다.
