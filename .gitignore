@@ -8,3 +8,6 @@ __pycache__/
 *.m4a
 *.wav
 photos/
+
+# 문서용 축소 예시 이미지만 허용 (원본 사진은 계속 제외)
+!docs/images/**
