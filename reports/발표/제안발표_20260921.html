@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>머리카락 7분의 1을 스마트폰으로</title>
+<style>
+:root{
+  --bg:#f7f6f3; --surface:#ffffff; --ink:#111214; --ink2:#4a4b52; --ink3:#83848f; --line:#e1dfd8;
+  --blue:#2a78d6; --blue-soft:#e6efFA; --orange:#eb6834; --orange-soft:#fdeee7; --red:#e34948; --red-soft:#fbe9e9;
+  --green:#008300; --green-soft:#e3f3ea; --gray:#c9c8c1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans CJK KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.deck{position:relative}
+.slide{width:1280px;height:720px;background:var(--surface);position:relative;overflow:hidden;padding:48px 64px 40px;display:flex;flex-direction:column;gap:14px}
+.slide.dark{background:#15161a;color:#f3f2ee}
+.slide.dark .sub,.slide.dark p{color:#c9c8c1}
+.kicker{font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--blue);text-transform:uppercase}
+.slide.dark .kicker{color:#8fb8f0}
+h1{font-size:54px;line-height:1.2;margin:0;font-weight:900;letter-spacing:-.02em}
+h2{font-size:38px;line-height:1.25;margin:0;font-weight:800;letter-spacing:-.02em}
+h3{font-size:20px;margin:0 0 6px;font-weight:700}
+p{font-size:19px;line-height:1.55;color:var(--ink2);margin:0}
+.lead{font-size:24px;color:var(--ink);font-weight:500}
+.hook{font-size:30px;font-weight:800;line-height:1.3;letter-spacing:-.01em}
+.sub{font-size:15px;color:var(--ink3)}
+.row{display:flex;gap:24px;align-items:stretch;flex:1;min-height:0}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card.blue{border-top:4px solid var(--blue)} .card.orange{border-top:4px solid var(--orange)} .card.red{border-top:4px solid var(--red)} .card.green{border-top:4px solid var(--green)}
+.big{font-size:64px;font-weight:900;line-height:1;letter-spacing:-.03em}
+.big small{font-size:22px;font-weight:600;color:var(--ink3);margin-left:6px}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--ink3);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+td b{color:var(--ink)}
+img.ph{width:100%;height:100%;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+.foot{position:absolute;left:64px;right:64px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink3)}
+.mark{background:var(--blue-soft);padding:0 6px;border-radius:5px;font-weight:700;color:var(--ink)}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.tag.orange{background:var(--orange-soft);color:var(--orange)} .tag.red{background:var(--red-soft);color:var(--red)} .tag.green{background:var(--green-soft);color:var(--green)}
+ul{margin:0;padding-left:20px} li{font-size:18px;line-height:1.5;color:var(--ink2);margin:3px 0}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.flow .n{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:15px;font-weight:600}
+.flow .n.hl{background:var(--blue);color:#fff;border-color:var(--blue)}
+.flow .a{color:var(--ink3);font-weight:700}
+svg text{font-family:inherit}
+.note{font-size:13px;color:var(--ink3)}
+@media screen{
+  body{padding:24px 0 60px}
+  .slide{margin:0 auto 24px;box-shadow:0 8px 30px rgba(0,0,0,.08);transform-origin:top center}
+}
+@media print{
+  @page{size:1280px 720px;margin:0}
+  body{background:#fff;padding:0}
+  .slide{margin:0 !important;box-shadow:none;page-break-after:always;break-after:page;transform:none !important}
+  .slide:last-child{page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 표지 -->
+<section class="slide dark" style="justify-content:center">
+  <div class="kicker">AIFFEL 엔지니어 3기 · 365 Challenge 제안 · 2026-09-21</div>
+  <div style="font-size:120px;font-weight:900;letter-spacing:-.03em;line-height:1;margin-top:8px">Ø20.02 <span style="color:#8fb8f0">±0.01</span></div>
+  <h1 style="margin-top:14px">머리카락의 7분의 1을<br>스마트폰으로 잽니다</h1>
+  <p style="margin-top:18px;font-size:22px">자동차 조향부품 샤프트 외경의 스마트폰 비전 측정 · 7주 파일럿</p>
+  <div class="foot"><span>팀 3인 · 광학·측정 / 인식·데이터 / 시스템·평가</span><span>1 / 15</span></div>
+</section>
+
+<!-- 2 현장 -->
+<section class="slide">
+  <div class="kicker">01 · 현장</div>
+  <div class="hook">이 공장은 아직도 사람이 재고, 손으로 적습니다</div>
+  <div class="row">
+    <div class="col" style="flex:1.15"><img class="ph" src="img/field_S05.jpg" alt="현장 백라이트 촬영 장면"></div>
+    <div class="col">
+      <div class="card blue"><h3>무엇을 재나</h3><p>자동차 조향부품 샤프트의 <b>베어링 압입부 외경</b>. 도면상 특별특성(중요 관리 치수), 허용 전폭 <b>20µm</b>.</p></div>
+      <div class="card"><h3>지금은</h3><p>작업자가 계측기로 재고 → 수기 → 전산 입력. 2026년 11월 품질경영시스템 인증 심사가 있어 <b>측정 기록의 자동화·추적성</b> 요구가 커지고 있다.</p></div>
+      <div class="card orange"><h3>왜 안 바꿨나</h3><p>전용 이미지 치수 측정기는 <b>수천만 원대</b>(업계 견적 기준). 이 규모의 공장이 도입하기 어렵다.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>2026-09-16 현장 촬영</span><span>2 / 15</span></div>
+</section>
+
+<!-- 3 왜 지금·왜 우리 -->
+<section class="slide">
+  <div class="kicker">02 · 왜 지금, 왜 우리</div>
+  <div class="hook">전용 측정기가 도입하기 어려운 건 이 공장만이 아닙니다</div>
+  <div class="row">
+    <div class="col">
+      <svg viewBox="0 0 560 300" width="100%" height="300" role="img" aria-label="공장 보유 중소·중견 163,272개사 중 스마트공장 도입 19.5%, 그중 기초 단계 75.5%, 제조 AI 도입 0.1%">
+        <g font-size="15" fill="#4a4b52">
+          <rect x="20" y="20" width="520" height="34" rx="4" fill="#2a78d6"/><text x="30" y="43" fill="#fff" font-weight="700">공장 보유 중소·중견 163,272개사</text>
+          <rect x="20" y="76" width="101" height="34" rx="4" fill="#2a78d6" opacity=".75"/><text x="130" y="99">스마트공장 도입 <tspan font-weight="700" fill="#111">19.5%</tspan> (중소 18.6%)</text>
+          <rect x="20" y="132" width="76" height="34" rx="4" fill="#2a78d6" opacity=".55"/><text x="106" y="155">그중 <tspan font-weight="700" fill="#111">75.5%</tspan>가 기초 단계</text>
+          <rect x="20" y="188" width="4" height="34" rx="2" fill="#eb6834"/><text x="34" y="211">제조 AI 도입 <tspan font-weight="700" fill="#eb6834">0.1%</tspan> · 계획 1.6%</text>
+          <text x="20" y="250" font-size="13" fill="#83848f">출처: 중소벤처기업부 2024 스마트제조혁신실태조사</text>
+          <text x="20" y="270" font-size="13" fill="#83848f">자동차 2·3차 협력사 약 5,000개사 (현대차그룹 2025-01)</text>
+          <text x="20" y="290" font-size="13" fill="#83848f">세계 산업계측 시장 약 160억 달러(2025), 상위 5사 40.7%</text>
+        </g>
+      </svg>
+    </div>
+    <div class="col">
+      <div class="card blue"><h3>왜 스마트폰인가</h3><p>이미 주머니에 있고 추가 비용이 0에 가깝다. 문헌: 스마트폰 계측은 가능하되 전용 장비보다 정확도가 낮다(SPIE 2015) / 산업용 카메라 + 백라이트 + 서브픽셀은 3µm(MST 2025). <b>그 사이 어디까지 갈 수 있는가</b>가 우리 질문이다.</p></div>
+      <div class="card"><h3>왜 우리인가</h3><ul><li>업체 현장 접근권 — 이미 한 번 촬영하고 실측값을 받았다</li><li>품질경영(식스시그마) 도메인 + YOLO 객체 검출 프로젝트 경험</li><li>선행 개발 1차 버전(YOLO+OpenCV) 보유</li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>배경</span><span>3 / 15</span></div>
+</section>
+
+<!-- 4 목표 -->
+<section class="slide">
+  <div class="kicker">03 · 목표</div>
+  <div class="hook">최종 목표는 계측기를 대신할 정밀도로 재는 것. 숫자로는 오차 3µm, 치우침 1µm</div>
+  <div class="row">
+    <div class="col" style="flex:1.2">
+      <svg viewBox="0 0 640 300" width="100%" height="300" role="img" aria-label="측정 오차 sd 사다리: 지금 17µm, 관문 8µm, 목표 3µm">
+        <g font-size="15">
+          <line x1="80" y1="250" x2="600" y2="250" stroke="#e1dfd8"/>
+          <rect x="100" y="80" width="110" height="170" rx="4" fill="#c9c8c1"/><text x="155" y="70" text-anchor="middle" font-weight="800" font-size="22" fill="#111">17µm</text><text x="155" y="275" text-anchor="middle" fill="#4a4b52">지금 (9/16)</text>
+          <rect x="280" y="170" width="110" height="80" rx="4" fill="#2a78d6" opacity=".6"/><text x="335" y="160" text-anchor="middle" font-weight="800" font-size="22" fill="#111">8µm</text><text x="335" y="275" text-anchor="middle" fill="#4a4b52">관문 (잠정)</text>
+          <rect x="460" y="220" width="110" height="30" rx="4" fill="#2a78d6"/><text x="515" y="210" text-anchor="middle" font-weight="800" font-size="22" fill="#111">3µm</text><text x="515" y="275" text-anchor="middle" fill="#4a4b52">계측기급</text>
+          <text x="30" y="40" font-size="13" fill="#83848f">측정 오차 sd (실측 대비)</text>
+        </g>
+      </svg>
+      <p class="note">관문 8µm · 목표 3µm · 바이어스 ±1µm는 잠정값. 1주차에 업체 품질담당자와 합의해 확정한다.</p>
+    </div>
+    <div class="col">
+      <div class="card blue"><h3>정의 (우리 기준)</h3><p>측정 오차 sd <b>3µm 이하</b>, 바이어스 <b>±1µm 이내</b>. 게이지 R&amp;R 10:1보다 느슨한 정의다 — 계측기를 없애는 게 아니라 <b>회색지대를 계측기에 회부하는 선별 측정</b>이라서다.</p></div>
+      <div class="card"><h3>7주 파일럿 완료 기준</h3><ul><li>핀게이지 캘리브 · 배치 고정 지그 · 재장착 검증을 갖춘 시스템이 현장에서 동작</li><li>규격에서 60µm 이상 벗어난 부품(가공·정삭 누락)을 회색지대 없이 검출 + 기록 자동화</li><li>매 단계 오차 sd·바이어스를 재서 <b>도달 가능 여부를 숫자로 판정</b></li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>목표</span><span>4 / 15</span></div>
+</section>
+
+<!-- 5 이미 들어가 봤다 -->
+<section class="slide">
+  <div class="kicker">04 · 사전 검증</div>
+  <div class="hook">제안서를 쓰기 전에 현장에 갔습니다</div>
+  <div class="row">
+    <div class="col" style="flex:1.3"><img class="ph" style="object-fit:contain;background:#fff" src="img/grid13.jpg" alt="시편 13개 첫 장 썸네일 격자"></div>
+    <div class="col">
+      <div class="flow" style="flex-direction:column;align-items:stretch;gap:6px">
+        <div class="n">09-10 팀 결성 · 문제 정의</div><div class="n">09-12 7월 사진 10장으로 한계 탐색 실험 7개</div><div class="n hl">09-16 업체 현장: 시편 13개 × 161장 + 계측기 실측 13개</div><div class="n">09-16 ~ 17 원자료 재현 21개 · 독립 검증 2인</div><div class="n">09-17 ~ 18 모델 7종 비교 · 자체 촬영 테스트 2회</div>
+      </div>
+      <div class="card blue" style="margin-top:6px"><p><b>161장을 업체 실측값과 대조했더니, 결과가 둘로 갈렸습니다.</b> 13개 중 11개는 한 무리, 2개가 수백 µm 튀었습니다.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>정상 10 × 14장 + 불량 3 × 7장, 6008px, 백라이트, 고정 촬영</span><span>5 / 15</span></div>
+</section>
+
+<!-- 6 발견 1 -->
+<section class="slide">
+  <div class="kicker">05 · 발견 1</div>
+  <div class="hook">튄 두 개를 파 봤더니 — 사진이 아니라 부품을 놓는 손이 흔들린 것이었습니다</div>
+  <div class="row">
+    <div class="col" style="flex:1.25;justify-content:center"><img class="ph" style="height:auto;object-fit:contain" src="img/S05_vs_S07.jpg" alt="S05 정상 배치와 S07 기울어진 배치 비교"></div>
+    <div class="col">
+      <svg viewBox="0 0 520 250" width="100%" height="250" role="img" aria-label="오차 세 층: 배치 189µm, 옆 구간 보정 후 17µm, 시편 간 잔차 13~21µm, 엣지 번짐 3.5~4µm">
+        <g font-size="14" fill="#4a4b52">
+          <text x="0" y="16" font-size="13" fill="#83848f">오차 sd (µm, 로그 눈금)</text>
+          <text x="0" y="52">(a) 배치 — 놓는 높이·기울기</text><rect x="235" y="38" width="240" height="20" rx="4" fill="#e34948"/><text x="481" y="53" font-weight="800" fill="#111">189</text>
+          <text x="0" y="96">(a) 옆 구간으로 배율 보정 후</text><rect x="235" y="82" width="130" height="20" rx="4" fill="#2a78d6"/><text x="371" y="97" font-weight="800" fill="#111">17</text>
+          <text x="0" y="140">(b) 제대로 놓인 시편끼리 잔차</text><rect x="235" y="126" width="122" height="20" rx="4" fill="#2a78d6" opacity=".65"/><text x="363" y="141" font-weight="800" fill="#111">13 ~ 21</text>
+          <text x="0" y="184">(c) 엣지 번짐 바닥</text><rect x="235" y="170" width="58" height="20" rx="4" fill="#2a78d6" opacity=".4"/><text x="299" y="185" font-weight="800" fill="#111">3.5 ~ 4</text>
+          <text x="0" y="228" font-size="13" fill="#83848f">사진 한 장 반복 흔들림 2 ~ 7µm, 14장 평균 0.7 ~ 1.9µm — 카메라는 흔들리지 않았다</text>
+        </g>
+      </svg>
+      <div class="card orange" style="padding:12px 16px"><p style="font-size:16px">S07은 <b>6.9° 기울고 130px 올라간</b> 자세였다(팀원 독립 분석). 같은 결론이 세 사람 데이터에서 반복됐다: <b>모델이 아니라 거치가 변수다.</b></p></div>
+    </div>
+  </div>
+  <div class="foot"><span>정상 10 + 미세 불량 2 = 12개 기준</span><span>6 / 15</span></div>
+</section>
+
+<!-- 7 발견 2·3 -->
+<section class="slide">
+  <div class="kicker">06 · 발견 2·3</div>
+  <div class="hook">화소를 4배 올려도, 모델을 7종 바꿔도 정밀도는 그대로였습니다</div>
+  <div class="row">
+    <div class="col">
+      <div class="card"><h3>픽셀은 답이 아니다</h3>
+      <svg viewBox="0 0 480 130" width="100%" height="130" role="img" aria-label="반복 흔들림: 2992px 3.8µm, 12240px 3.47µm">
+        <g font-size="14" fill="#4a4b52">
+          <text x="0" y="28">2992px (34.7µm/px)</text><rect x="170" y="14" width="228" height="20" rx="4" fill="#2a78d6"/><text x="406" y="29" font-weight="700" fill="#111">3.8µm</text>
+          <text x="0" y="68">12240px (8.3µm/px)</text><rect x="170" y="54" width="208" height="20" rx="4" fill="#2a78d6"/><text x="386" y="69" font-weight="700" fill="#111">3.47µm</text>
+          <text x="0" y="112" font-size="13" fill="#83848f">픽셀이 4배 잘아져도 물리 단위 바닥은 같다 → 바닥은 픽셀이 아니라 엣지 번짐</text>
+        </g>
+      </svg></div>
+      <div class="card"><h3>모델도 답이 아니다</h3>
+      <svg viewBox="0 0 480 120" width="100%" height="120" role="img" aria-label="9개 모델의 측정 흔들림 0.112~0.128px, 한 묶음">
+        <g font-size="13" fill="#4a4b52">
+          <line x1="40" y1="40" x2="440" y2="40" stroke="#e1dfd8"/>
+          <text x="40" y="20" fill="#83848f">측정 px 흔들림 (검증 70장)</text>
+          <circle cx="112" cy="40" r="6" fill="#2a78d6"/><circle cx="118" cy="40" r="6" fill="#2a78d6"/><circle cx="125" cy="40" r="6" fill="#2a78d6"/><circle cx="130" cy="40" r="6" fill="#2a78d6"/><circle cx="136" cy="40" r="6" fill="#2a78d6"/><circle cx="121" cy="40" r="6" fill="#2a78d6"/><circle cx="128" cy="40" r="6" fill="#2a78d6"/><circle cx="115" cy="40" r="6" fill="#2a78d6"/><circle cx="124" cy="40" r="6" fill="#2a78d6"/>
+          <text x="40" y="66">0.10px</text><text x="400" y="66">0.30px</text>
+          <text x="150" y="45" font-weight="700" fill="#111">9개 모델 0.112 ~ 0.128px — 한 묶음</text>
+          <text x="40" y="100" fill="#83848f">v8·v10·11·12·26 n/s + 기존 + 앙상블 · 팀원 독립 재현(6종) 차이 2µm 미만</text>
+        </g>
+      </svg></div>
+    </div>
+    <div class="col">
+      <div class="card blue"><h3>그런데 재학습은 필요합니다</h3><p>기존 모델(7월 조건 학습)은 9/16 시편 하나에서 신뢰도 <b>0.27</b>로 무너졌고, 집 구도에서는 <b>14장 전부 미검출</b>. 9/16 조건으로 재학습하면 어떤 버전이든 <b>0.78 ~ 0.97</b>, 14/14 검출.</p><p style="margin-top:8px"><b>필요한 것은 새 아키텍처가 아니라 현장 조건의 학습 데이터.</b></p></div>
+      <div class="card"><h3>원본 해상도 붕괴도 모델 탓이 아니었다</h3><p>6008px 원본을 그대로 넣으면 14장 중 5장이 튀었지만, 9개 모델 전부 박스는 정상. 측정 파라미터 문제 → 2992 축소로 해결.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>09-16 심야 · 09-17 밤 · 팀원 실험 09-18</span><span>7 / 15</span></div>
+</section>
+
+<!-- 8 발견 4 -->
+<section class="slide">
+  <div class="kicker">07 · 발견 4</div>
+  <div class="hook">그런데 집에서 찍어 봤더니, 찍는 방식 하나로 10배가 갈렸습니다</div>
+  <div class="row">
+    <div class="col" style="flex:1.1">
+      <svg viewBox="0 0 560 250" width="100%" height="250" role="img" aria-label="프레임 간 흔들림: 자동·6072→2992 축소 1.0µm, 프로 모드·3056 원본 9.5µm, RAW 3.4µm">
+        <g font-size="15" fill="#4a4b52">
+          <text x="0" y="20" font-size="13" fill="#83848f">같은 시편 · 같은 세팅 · 프레임 간 흔들림 (µm)</text>
+          <text x="0" y="62">기본 카메라 자동 · 6072→2992 축소</text><rect x="0" y="70" width="48" height="22" rx="4" fill="#2a78d6"/><text x="56" y="86" font-weight="800" fill="#111" font-size="18">1.0</text>
+          <text x="0" y="128">프로 모드 수동 고정 · 3056 원본</text><rect x="0" y="136" width="456" height="22" rx="4" fill="#eb6834"/><text x="464" y="152" font-weight="800" fill="#111" font-size="18">9.5</text>
+          <text x="0" y="194">RAW (같은 프레임의 JPEG는 1.4)</text><rect x="0" y="202" width="163" height="22" rx="4" fill="#c9c8c1"/><text x="171" y="218" font-weight="800" fill="#111" font-size="18">3.4</text>
+          <text x="0" y="246" font-size="13" fill="#83848f">9/18 자체 테스트 · n=14 ~ 15 · 모니터 백라이트 · 검정 코팅 시편 · 22µm/px</text>
+        </g>
+      </svg>
+      <img src="img/A_vs_B.jpg" alt="윗변 확대: 축소본은 비탈이 고르고 원본은 거칠다" style="width:100%;border-radius:10px;border:1px solid var(--line)">
+    </div>
+    <div class="col">
+      <div class="card blue"><h3>세 가지가 갈렸다</h3><ul><li><b>고해상도로 찍어 축소</b>가 결정적 — 픽셀을 평균해 잡음을 깎는다 (10배)</li><li><b>자동 노출</b>은 문제가 아니었다 — 노출 잠금·프로 모드·RAW 불필요</li><li><b>가까이</b> 찍으면 같은 px 흔들림이 더 작은 µm (34.7 → 22µm/px)</li></ul></div>
+      <div class="card orange"><h3>뜻</h3><p>9/16의 바닥 3.5 ~ 4µm는 고정 상수가 아니다. <b>촬영 조건으로 내려갈 여지가 있다.</b> 비싼 장비 전에 쓸 수 있는 싼 지렛대가 있다는 뜻.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>단서: 집 세팅, 시편 1개, 프레임 간 반복 sd (놓는 방식·기준 구간 차이 미포함)</span><span>8 / 15</span></div>
+</section>
+
+<!-- 9 지금 도달 -->
+<section class="slide">
+  <div class="kicker">08 · 지금 도달한 것</div>
+  <div class="hook">지금 이 상태로도 가공 누락은 놓치지 않습니다 — 그리고 정상품끼리는 아직 못 가릅니다</div>
+  <div class="row">
+    <div class="col">
+      <div class="card blue"><div class="big">50 ~ 55<small>µm</small></div><p>검출 문턱 = 오차 sd 17 × 3. 규격에서 이만큼 벗어난 부품은 헛경보 없이 검출. 가공 누락품(+375µm)은 오차의 <b>15배</b>로 뚜렷.</p></div>
+      <div class="card"><h3>솔직한 숫자</h3><p>정상 12개를 하나 빼고 맞혀 보면 평균 오차 8.3 ~ 9.0µm인데, <b>측정 없이 평균값만 찍어도 8.4µm</b>. 정상 구간(폭 34µm ≈ 1px)에서 측정 정보는 아직 0.</p></div>
+    </div>
+    <div class="col">
+      <h3>측정 오차가 판정에 어떻게 쓰이나 — 3단 판정(합격 / 불합격 / 계측기 회부)</h3>
+      <table>
+        <tr><th>측정 오차 sd</th><th>확정 판정 비율</th><th>확정 중 오판</th></tr>
+        <tr><td>17µm (지금)</td><td>2%</td><td>57%</td></tr>
+        <tr><td>8µm (관문)</td><td>3%</td><td>24%</td></tr>
+        <tr><td><b>4µm</b> (엣지 바닥 그대로일 때 폰의 최선)</td><td><b>21%</b></td><td>2.5%</td></tr>
+        <tr><td><b>3µm</b></td><td><b>37%</b></td><td>1.3%</td></tr>
+        <tr><td>2µm</td><td>54%</td><td>0.9%</td></tr>
+        <tr><td>1µm (산업용 급)</td><td>72%</td><td>0.6%</td></tr>
+      </table>
+      <p class="note">9/16 실측 12개 분포에 측정 잡음을 얹은 시뮬레이션, 회색지대 ±2σ. 바이어스 +4µm면 sd 2.5에서도 오판 6% → 기준물이 필요한 이유. 문턱·회색지대 폭은 현장 검증에서 업체와 합의.</p>
+    </div>
+  </div>
+  <div class="foot"><span>reports/검출문턱 산출근거 · 3단 판정 시뮬레이션</span><span>9 / 15</span></div>
+</section>
+
+<!-- 10 계획 -->
+<section class="slide">
+  <div class="kicker">09 · 계획</div>
+  <div class="hook">원인을 알았으니 7주 계획은 추측이 아니라 처방입니다</div>
+  <table style="font-size:15px">
+    <tr><th style="width:60px">순서</th><th>조치</th><th style="width:120px">겨냥하는 층</th><th>무엇을 확인하나</th></tr>
+    <tr><td>1</td><td><b>검교정 핀게이지 2개</b>를 부품과 같은 평면에 놓고 같이 찍어 부품 대신 기준으로</td><td>(b) 잔차 13~21</td><td>잔차 중 기준 구간 몫 · 2점 캘리브 성립 · 바이어스 ±1µm</td></tr>
+    <tr><td>2</td><td><b>V블록 + 축 스토퍼 지그</b>, 같은 시편 다시 놓고 20~30장</td><td>(a) 배치 189</td><td>지금까지 0건인 재장착 산포</td></tr>
+    <tr><td>3</td><td><b>촬영 조건 고정</b>: 최고 해상도 → 2992 축소 · 근접 · 순수 백라이트 · 드리프트 점검</td><td>(c) 번짐 3.5~4</td><td>1.0µm 관찰이 현장 조건에서 재현되나</td></tr>
+    <tr><td>3-1</td><td><b>거치 이상 자동 검출</b> — 박스 기울기·높이가 범위 밖이면 값을 내지 않고 재장착 요구</td><td>안전</td><td>기울어진 부품이 "측정 성공"으로 기록되는 일을 막는다</td></tr>
+    <tr><td>4</td><td>위 셋 적용 후 오차 sd → <b>광학계 판단점</b></td><td>—</td><td>계측기급 도달 가능성. 아니면 산업용 광학계 투자 근거 완성</td></tr>
+  </table>
+  <div class="row" style="flex:0 0 auto">
+    <div class="card blue" style="flex:1"><h3>현장 방문은 결정 실험 두 번뿐</h3><p style="font-size:16px"><b>1차(3주차)</b> = 한 질문 "잔차의 원인이 기준 구간인가" — 핀게이지 + 재장착 + 칼라·끝단 실측 + 일부러 어긋난 촬영(±10~100px). <b>2차(7주차)</b> = 최종 검증만. 나머지는 보유 시편으로 자체 촬영.</p></div>
+    <div class="card" style="flex:1"><h3>어느 쪽이든 11월에 답이 있다</h3><p style="font-size:16px">(c)가 2~3µm로 내려가면 3단 판정 시스템을 현장에 올린다. 안 내려가면 "폰으로는 안 된다"를 <b>숫자로 결론</b>내고 산업용 광학계 투자 근거를 완성한다.</p></div>
+  </div>
+  <div class="foot"><span>개발 계획</span><span>10 / 15</span></div>
+</section>
+
+<!-- 11 시스템·프로토타입 -->
+<section class="slide">
+  <div class="kicker">10 · 시스템과 프로토타입</div>
+  <div class="hook">이미 돌아갑니다. 폰으로 찍어 올리면 3초 뒤 측정값과 판정이 뜹니다</div>
+  <div class="flow">
+    <div class="n">폰 촬영</div><span class="a">→</span><div class="n">2992 축소</div><span class="a">→</span><div class="n">측정부 위치 검출 (YOLO)</div><span class="a">→</span><div class="n">위·아래 엣지 31열 서브픽셀 (OpenCV)</div><span class="a">→</span><div class="n hl">기준물·옆 구간 배율 보정</div><span class="a">→</span><div class="n">mm 변환</div><span class="a">→</span><div class="n">3단 판정</div><span class="a">→</span><div class="n">기록 (DB)</div>
+  </div>
+  <div class="row">
+    <div class="col"><img class="ph" src="img/home_A.jpg" alt="자체 촬영 장면"></div>
+    <div class="col">
+      <div class="card green"><h3>돌아가는 것</h3><ul><li>폰 업로드 → 즉석 측정·판정 앱 (9/15 제작, 9/16 현장 사용)</li><li>웹 + API + DB 기록 구조의 선행 앱</li><li>실패 감지 → 재촬영 규칙 (유효 측정선·신뢰도·비율)</li></ul></div>
+      <div class="card"><h3>아직 아닌 것</h3><ul><li>핀게이지 캘리브레이션 · 재장착 검증</li><li>거치 이상 자동 검출의 현장 문턱값</li><li>기록 자동화 연동</li></ul></div>
+      <p class="note">전처리와 측정 로직을 분리하고 변환율·상수를 설정 파일로 — 장비가 바뀌어도 측정 로직은 그대로 옮긴다.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Low-fidelity prototype · 시연 가능</span><span>11 / 15</span></div>
+</section>
+
+<!-- 12 평가지표 -->
+<section class="slide">
+  <div class="kicker">11 · 평가 지표</div>
+  <div class="hook">성공을 우리가 정하지 않습니다. 숫자가 정합니다</div>
+  <table style="font-size:14px">
+    <tr><th>구분</th><th>지표</th><th>현재값 (9/16)</th><th>목표값</th><th>측정 방법</th><th>시점</th></tr>
+    <tr><td>정량</td><td>측정 오차 sd (실측 대비)</td><td>17µm</td><td>8µm 이하 → 3µm 도달 여부 판정</td><td>시편별 실측 vs 측정, 하나 빼고 맞히기</td><td>1·2차</td></tr>
+    <tr><td>정량</td><td>바이어스 (기준물 대비)</td><td>미측정</td><td>±1µm 이내</td><td>핀게이지 2점 캘리브 후 잔차 평균</td><td>1차</td></tr>
+    <tr><td>정량</td><td>재장착 재현성 σ</td><td>미측정 (0건)</td><td>측정 완료 + 보고</td><td>같은 시편 재장착 20~30장</td><td>1차</td></tr>
+    <tr><td>정량</td><td>검출 문턱</td><td>50~55µm</td><td>30µm 이하</td><td>오차 sd × 3 (k는 현장 합의)</td><td>2차</td></tr>
+    <tr><td>정량</td><td>판정 성능</td><td>미측정</td><td>확정 판정 비율 보고, 확정 중 오판 0</td><td>실측 대비 3단 판정 집계, 오판 유형별</td><td>2차</td></tr>
+    <tr><td>정량</td><td>강건성 (위치·기울기·조명)</td><td>130px 어긋남 → +524µm</td><td>허용 범위 수치화, 그 안에서 검출 실패 0</td><td>어긋남 ±10~100px · 기울기 · 밝기 단계별</td><td>1·2차</td></tr>
+    <tr><td>정량</td><td>유효 측정선 · 처리 시간</td><td>23~31/31 · 약 3초</td><td>23/31 이상 · 5초 이내</td><td>장당 로그</td><td>상시</td></tr>
+    <tr><td>정성</td><td>현장 운영성</td><td>—</td><td>작업자 1인이 촬영→판정→기록</td><td>현장 시연 + 피드백</td><td>2차</td></tr>
+  </table>
+  <p class="note">검출률 %는 쓰지 않는다(큰 불량 표본 4개, 통계 하한 47%). 목표값은 잠정이며 1주차에 업체 품질담당자와 합의. 9/16·9/18 수치는 진단값이지 성능 보증이 아니다.</p>
+  <div class="foot"><span>평가 지표</span><span>12 / 15</span></div>
+</section>
+
+<!-- 13 마일스톤·예산·역할 -->
+<section class="slide">
+  <div class="kicker">12 · 일정 · 예산 · 역할</div>
+  <div class="hook">지원 예산은 세 층에 그대로 갑니다 — 기준물, 지그, 조명</div>
+  <div class="row">
+    <div class="col" style="flex:1.3">
+      <table style="font-size:14px">
+        <tr><th>주</th><th>기간</th><th>할 일</th><th>산출물</th></tr>
+        <tr><td>1</td><td>09-22~26</td><td>장비 즉시 주문 · 촬영 프로토콜 v2 · 측정 규격서 · 업체에 1차 방문·실측 요청</td><td>프로토콜, 규격서</td></tr>
+        <tr><td>2</td><td>09-29~10-02</td><td>지그 제작 · 자체 촬영 시작(재장착·조건·핀게이지) · 앱에 핀게이지 캘리브</td><td>자체 데이터, 앱 v3</td></tr>
+        <tr><td>3</td><td>10-05~08</td><td><b>현장 1차 = 결정 실험</b></td><td>현장 데이터 2</td></tr>
+        <tr><td>4</td><td>10-12~16</td><td>오차 세 층 재계산 · 관문 판정 · <b>재검토 지점</b></td><td>중간 보고</td></tr>
+        <tr><td>5</td><td>10-19~23</td><td>3단 판정·회색지대·기록 자동화 연동</td><td>앱 v4</td></tr>
+        <tr><td>6</td><td>10-26~30</td><td>위치 모델 현장 조건 재학습 · 운영 시나리오</td><td>운영 매뉴얼 초안</td></tr>
+        <tr><td>7</td><td>11-02~09</td><td><b>현장 2차 = 최종 검증</b> · 보고서·발표</td><td>최종 보고</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <div class="card blue"><h3>예산 항목</h3><table style="font-size:14px">
+        <tr><td>검교정 핀게이지 2개</td><td>기준물 (b)</td></tr>
+        <tr><td>균일 백라이트 + 확산판·배경판</td><td>조명 (c)</td></tr>
+        <tr><td>V블록 + 축 스토퍼 재료</td><td>배치 (a)</td></tr>
+        <tr><td>무거운 삼각대 · 리모컨 셔터</td><td>흔들림</td></tr>
+        <tr><td>현장 교통비 (2회)</td><td>결정 실험</td></tr>
+        <tr><td>텔레센트릭·산업용 카메라 대여</td><td>검토 항목 (4주차 판단점)</td></tr>
+      </table></div>
+      <div class="card"><h3>역할</h3><p style="font-size:15px">팀 3인: 광학·측정 / 인식·데이터 / 시스템·평가 (단계별 유연 운영). 업체: 품질담당자(실측·기준 합의), 작업자(2차 운영 시험).</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>31 수업일 · 1주차 추석, 3주차 한글날</span><span>13 / 15</span></div>
+</section>
+
+<!-- 14 한계·보완·대비 -->
+<section class="slide">
+  <div class="kicker">13 · 한계 · 보완 · 대비</div>
+  <div class="hook">우리가 틀릴 수 있는 곳과, 그때 무엇을 할지를 먼저 말씀드립니다</div>
+  <table style="font-size:15px">
+    <tr><th style="width:34%">한계</th><th style="width:33%">보완</th><th>안 되면</th></tr>
+    <tr><td><b>계획 전체가 새 조건의 촬영에 달려 있다</b></td><td>보유 시편 + 핀게이지로 자체 촬영 상시. 현장은 실측이 필요한 검증에만</td><td>1차가 밀리면 자체 결과로 4주차 재검토, 1차를 5주차로</td></tr>
+    <tr><td>거치가 틀려도 파이프라인이 경고 없이 값을 낸다</td><td>거치 이상 자동 검출 + 첫 장 즉석 확인</td><td>작업자가 첫 장을 눈으로 확인하는 절차</td></tr>
+    <tr><td>시편 12개, 한 세션, 고정 촬영</td><td>재촬영 1·2차에 재장착 세트</td><td>161장 + 자체 지그 실험으로 σ 추정</td></tr>
+    <tr><td>큰 불량 표본 4개</td><td>업체에 NG품 보관·제공 요청</td><td>검출률 대신 문턱 표현 유지</td></tr>
+    <tr><td>잔차 13~21µm 원인 미확인</td><td>칼라·끝단 실측 + 핀게이지로 원인 분리</td><td>원인이 반사·엣지면 조명 개선으로 전환</td></tr>
+    <tr><td>엣지 번짐 바닥 3.5~4µm</td><td>촬영 조건(축소·근접·백라이트)으로 1.0µm 관찰</td><td>산업용 광학계 필요 근거로 정리</td></tr>
+    <tr><td>업체 인증 심사(10월 말~11월 초)와 겹침</td><td>재촬영을 10월 초·11월 초로</td><td>2차는 자체 시편으로 대체</td></tr>
+    <tr><td>관문 8µm는 근거 없는 잠정값</td><td>1차 재촬영 후 재설정</td><td>4주차 재검토 지점</td></tr>
+  </table>
+  <div class="foot"><span>한계</span><span>14 / 15</span></div>
+</section>
+
+<!-- 15 마무리 -->
+<section class="slide dark" style="justify-content:center">
+  <div class="kicker">마무리</div>
+  <h1>머리카락의 7분의 1 —<br>7주 뒤 숫자로 답하겠습니다</h1>
+  <div class="row" style="flex:0 0 auto;margin-top:26px">
+    <div class="card" style="background:#1f2027;border-color:#2c2d35;flex:1"><h3 style="color:#8fb8f0">대표에게</h3><p style="color:#c9c8c1;font-size:16px">"전용 측정기를 사야 하는가"에 대한 숫자 답 · 인증 심사용 자동 측정 기록 · 결과와 무관하게 남는 과정과 데이터</p></div>
+    <div class="card" style="background:#1f2027;border-color:#2c2d35;flex:1"><h3 style="color:#8fb8f0">실무자에게</h3><p style="color:#c9c8c1;font-size:16px">재고 적는 일이 사진 한 장으로 · 가공·정삭 누락을 자기 앞에서 즉시 · 인증 준비 서류가 줄어든다</p></div>
+  </div>
+  <p style="margin-top:20px;font-size:16px;color:#8b8b98">계측기급 정밀도에 7주 안에 도달하지 못하더라도 이 둘은 남습니다.</p>
+  <div class="foot"><span>감사합니다</span><span>15 / 15</span></div>
+</section>
+
+</div>
+<script>
+// 화면에서는 폭에 맞춰 축소 표시. 인쇄(PDF)에서는 1280x720 그대로 한 장씩.
+(function(){
+  function fit(){var w=Math.min(window.innerWidth-40,1280),s=w/1280;document.querySelectorAll('.slide').forEach(function(el){el.style.transform='scale('+s+')';el.style.marginBottom=(24-(720*(1-s)))+'px';});}
+  if(!window.matchMedia||!window.matchMedia('print').matches){fit();window.addEventListener('resize',fit);}
+})();
+</script>
+</body>
+</html>

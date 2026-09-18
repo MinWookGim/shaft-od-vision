@@ -11,3 +11,5 @@ photos/
 
 # 문서용 축소 예시 이미지만 허용 (원본 사진은 계속 제외)
 !docs/images/**
+!reports/발표/img/**
+!reports/발표/*.pdf
