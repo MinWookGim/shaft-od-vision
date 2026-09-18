@@ -37,6 +37,7 @@ docs/
   03_claims.md         아직 추정인 것. 근거가 생기면 facts 로 옮긴다
   04_decisions/        D-001, D-002 ... 한 결정에 파일 하나
   05_meetings/         날짜별 회의·현장 기록
+  06_kpt/              금요일 팀 KPT 회고
   멘토질문_*.md        멘토링 질문 (v2 = 발송용, 존댓말)
 experiments/           실험 코드. 스크립트 하나 = 질문 하나
   results/             실행 출력을 날짜 붙여 그대로
