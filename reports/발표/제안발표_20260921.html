@@ -162,11 +162,11 @@ svg text{font-family:inherit}
     <div class="col">
       <svg viewBox="0 0 520 250" width="100%" height="250" role="img" aria-label="오차 세 층: 배치 189µm, 옆 구간 보정 후 17µm, 시편 간 잔차 13~21µm, 엣지 번짐 3.5~4µm">
         <g font-size="14" fill="#4a4b52">
-          <text x="0" y="16" font-size="13" fill="#83848f">오차 sd (µm, 로그 눈금)</text>
-          <text x="0" y="52">(a) 배치 — 놓는 높이·기울기</text><rect x="235" y="38" width="240" height="20" rx="4" fill="#e34948"/><text x="481" y="53" font-weight="800" fill="#111">189</text>
-          <text x="0" y="96">(a) 옆 구간으로 배율 보정 후</text><rect x="235" y="82" width="130" height="20" rx="4" fill="#2a78d6"/><text x="371" y="97" font-weight="800" fill="#111">17</text>
-          <text x="0" y="140">(b) 제대로 놓인 시편끼리 잔차</text><rect x="235" y="126" width="122" height="20" rx="4" fill="#2a78d6" opacity=".65"/><text x="363" y="141" font-weight="800" fill="#111">13 ~ 21</text>
-          <text x="0" y="184">(c) 엣지 번짐 바닥</text><rect x="235" y="170" width="58" height="20" rx="4" fill="#2a78d6" opacity=".4"/><text x="299" y="185" font-weight="800" fill="#111">3.5 ~ 4</text>
+          <text x="0" y="16" font-size="13" fill="#83848f">오차의 크기 = 실측과 어긋나는 폭 sd (단위 µm, 로그 눈금)</text>
+          <text x="0" y="52">(a) 부품을 놓는 높이·기울기</text><rect x="235" y="38" width="222" height="20" rx="4" fill="#e34948"/><text x="463" y="53" font-weight="800" fill="#111">189<tspan font-size="11" font-weight="600">µm</tspan></text>
+          <text x="0" y="96">(a′) 옆 구간을 자로 써서 보정한 뒤</text><rect x="235" y="82" width="130" height="20" rx="4" fill="#2a78d6"/><text x="371" y="97" font-weight="800" fill="#111">17<tspan font-size="11" font-weight="600">µm</tspan></text>
+          <text x="0" y="140">(b) 제대로 놓아도 남는 차이</text><rect x="235" y="126" width="122" height="20" rx="4" fill="#2a78d6" opacity=".65"/><text x="363" y="141" font-weight="800" fill="#111">13 ~ 21<tspan font-size="11" font-weight="600">µm</tspan></text>
+          <text x="0" y="184">(c) 경계선 번짐 — 사진의 한계</text><rect x="235" y="170" width="58" height="20" rx="4" fill="#2a78d6" opacity=".4"/><text x="299" y="185" font-weight="800" fill="#111">3.5 ~ 4<tspan font-size="11" font-weight="600">µm</tspan></text>
           <text x="0" y="228" font-size="13" fill="#83848f">사진 한 장 반복 흔들림 2 ~ 7µm, 14장 평균 0.7 ~ 1.9µm — 카메라는 흔들리지 않았다</text>
         </g>
       </svg>
@@ -183,18 +183,19 @@ svg text{font-family:inherit}
   <div class="row">
     <div class="col">
       <div class="card"><h3>픽셀은 답이 아니다</h3>
-      <svg viewBox="0 0 480 130" width="100%" height="130" role="img" aria-label="반복 흔들림: 2992px 3.8µm, 12240px 3.47µm">
+      <svg viewBox="0 0 480 120" width="100%" height="120" role="img" aria-label="반복 흔들림: 2992px 3.8µm, 12240px 3.47µm">
         <g font-size="14" fill="#4a4b52">
-          <text x="0" y="28">2992px (34.7µm/px)</text><rect x="170" y="14" width="228" height="20" rx="4" fill="#2a78d6"/><text x="406" y="29" font-weight="700" fill="#111">3.8µm</text>
-          <text x="0" y="68">12240px (8.3µm/px)</text><rect x="170" y="54" width="208" height="20" rx="4" fill="#2a78d6"/><text x="386" y="69" font-weight="700" fill="#111">3.47µm</text>
-          <text x="0" y="112" font-size="13" fill="#83848f">픽셀이 4배 잘아져도 물리 단위 바닥은 같다 → 바닥은 픽셀이 아니라 엣지 번짐</text>
+          <text x="0" y="24">축소본 2992px</text><rect x="170" y="10" width="228" height="20" rx="4" fill="#2a78d6"/><text x="406" y="25" font-weight="700" fill="#111">3.8µm</text>
+          <text x="0" y="58">원본 12240px</text><rect x="170" y="44" width="208" height="20" rx="4" fill="#2a78d6"/><text x="386" y="59" font-weight="700" fill="#111">3.47µm</text>
+          <text x="0" y="98" font-size="12" fill="#83848f">막대 = 같은 사진을 반복해 쟀을 때 흔들리는 폭 sd(µm). 1px = 34.7µm vs 8.3µm</text>
+          <text x="0" y="116" font-size="12" fill="#83848f">픽셀을 4배 잘게 해도 같다 → 한계는 픽셀이 아니라 경계선 번짐</text>
         </g>
       </svg></div>
       <div class="card"><h3>모델도 답이 아니다</h3>
       <svg viewBox="0 0 480 120" width="100%" height="120" role="img" aria-label="9개 모델의 측정 흔들림 0.112~0.128px, 한 묶음">
         <g font-size="13" fill="#4a4b52">
           <line x1="40" y1="40" x2="440" y2="40" stroke="#e1dfd8"/>
-          <text x="40" y="20" fill="#83848f">측정 px 흔들림 (검증 70장)</text>
+          <text x="40" y="20" fill="#83848f">모델별 측정 흔들림 sd (px, 검증 70장)</text>
           <circle cx="112" cy="40" r="6" fill="#2a78d6"/><circle cx="118" cy="40" r="6" fill="#2a78d6"/><circle cx="125" cy="40" r="6" fill="#2a78d6"/><circle cx="130" cy="40" r="6" fill="#2a78d6"/><circle cx="136" cy="40" r="6" fill="#2a78d6"/><circle cx="121" cy="40" r="6" fill="#2a78d6"/><circle cx="128" cy="40" r="6" fill="#2a78d6"/><circle cx="115" cy="40" r="6" fill="#2a78d6"/><circle cx="124" cy="40" r="6" fill="#2a78d6"/>
           <text x="40" y="66">0.10px</text><text x="400" y="66">0.30px</text>
           <text x="150" y="45" font-weight="700" fill="#111">9개 모델 0.112 ~ 0.128px — 한 묶음</text>
