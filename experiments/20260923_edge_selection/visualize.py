@@ -55,18 +55,22 @@ def render(path, result, crop_pad=0.15, dot_r=None, line_w=None, font_size=None,
     d = ImageDraw.Draw(im)
     x1,y1,x2,y2 = result["roi"]
     w = x2-x1; h=y2-y1
-    dot_r = dot_r or max(2, int(w*0.01))
-    line_w = line_w or max(1, int(w*0.004))
+    # 더 굵고 길게 — 작게 축소돼도(리포트 삽입용) 잘 보이도록
+    dot_r = dot_r or max(5, int(w*0.028))
+    line_w = line_w or max(3, int(w*0.010))
     for pt in result["pts"]:
         if not pt.get("found", True):
             continue
         x = pt["x_abs"]
-        color_top = (255,60,60) if pt["valid"] else (150,150,150)
-        color_bot = (60,120,255) if pt["valid"] else (150,150,150)
-        d.line([(x, pt["top_abs"]-dot_r*2), (x, pt["top_abs"]+dot_r*2)], fill=color_top, width=line_w)
-        d.line([(x, pt["bottom_abs"]-dot_r*2), (x, pt["bottom_abs"]+dot_r*2)], fill=color_bot, width=line_w)
-    # crop
-    pad_x = int(w*crop_pad); pad_y = int(h*0.1)
+        color_top = (255,50,50) if pt["valid"] else (140,140,140)
+        color_bot = (40,110,255) if pt["valid"] else (140,140,140)
+        # 세로 틱 + 중심 원(circle)으로 위치를 두 배로 강조
+        d.line([(x, pt["top_abs"]-dot_r*2.4), (x, pt["top_abs"]+dot_r*2.4)], fill=color_top, width=line_w)
+        d.line([(x, pt["bottom_abs"]-dot_r*2.4), (x, pt["bottom_abs"]+dot_r*2.4)], fill=color_bot, width=line_w)
+        d.ellipse([x-dot_r, pt["top_abs"]-dot_r, x+dot_r, pt["top_abs"]+dot_r], outline=color_top, width=line_w)
+        d.ellipse([x-dot_r, pt["bottom_abs"]-dot_r, x+dot_r, pt["bottom_abs"]+dot_r], outline=color_bot, width=line_w)
+    # crop (세로는 ROI 자체가 이미 넓어서 여백을 최소로만 둔다)
+    pad_x = int(w*crop_pad); pad_y = int(h*0.02)
     cx1, cy1 = max(0,x1-pad_x), max(0,y1-pad_y)
     cx2, cy2 = min(im.width, x2+pad_x), min(im.height, y2+pad_y)
     crop = im.crop((cx1,cy1,cx2,cy2))
@@ -100,7 +104,7 @@ target_h = 900
 def fit(im, h):
     w = int(im.width * h/im.height)
     return im.resize((w,h), Image.LANCZOS)
-col_w = 420
+col_w = 950  # 리포트에 크게 박아도 흐려지지 않도록 고해상도로
 def fit_w(im, w):
     h = int(im.height * w/im.width)
     return im.resize((w,h), Image.LANCZOS)
@@ -108,24 +112,24 @@ crop_o2 = fit_w(crop_o, col_w)
 crop_s2 = fit_w(crop_s, col_w)
 target_h = max(crop_o2.height, crop_s2.height)
 
-gap=40
-head_h = 90
-foot_h = 50
+gap=70
+head_h = 150
+foot_h = 80
 canvas = Image.new("RGB", (col_w*2+gap, target_h+head_h+foot_h), (255,255,255))
 d = ImageDraw.Draw(canvas)
 canvas.paste(crop_o2, (0,head_h))
 canvas.paste(crop_s2, (col_w+gap,head_h))
 try:
-    font = ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 20, index=2)
-    font_s = ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 16, index=2)
+    font = ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 42, index=2)
+    font_s = ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 32, index=2)
 except Exception:
     font = font_s = ImageFont.load_default()
-d.text((10,8), "원본 6008px", fill=(0,0,0), font=font)
-d.text((10,34), f"유효 {n_valid_o}/31", fill=(0,0,0), font=font_s)
-d.text((10,56), f"유효점만 std={std_of(r_orig['pts'],True):.1f}px", fill=(0,0,0), font=font_s)
-d.text((col_w+gap+10,8), "2992px 축소", fill=(0,0,0), font=font)
-d.text((col_w+gap+10,34), f"유효 {n_valid_s}/31", fill=(0,0,0), font=font_s)
-d.text((col_w+gap+10,56), f"유효점만 std={std_of(r_small['pts'],True):.2f}px", fill=(0,0,0), font=font_s)
-d.text((10, head_h+target_h+14), "빨강=상단엣지  파랑=하단엣지  회색=이상치로 걸러진 점", fill=(60,60,60), font=font_s)
+d.text((14,14), "원본 6008px", fill=(0,0,0), font=font)
+d.text((14,64), f"유효 {n_valid_o}/31", fill=(0,0,0), font=font_s)
+d.text((14,104), f"유효점만 std={std_of(r_orig['pts'],True):.1f}px", fill=(0,0,0), font=font_s)
+d.text((col_w+gap+14,14), "2992px 축소", fill=(0,0,0), font=font)
+d.text((col_w+gap+14,64), f"유효 {n_valid_s}/31", fill=(0,0,0), font=font_s)
+d.text((col_w+gap+14,104), f"유효점만 std={std_of(r_small['pts'],True):.2f}px", fill=(0,0,0), font=font_s)
+d.text((14, head_h+target_h+20), "빨강=상단엣지  파랑=하단엣지  회색=이상치로 걸러진 점", fill=(60,60,60), font=font_s)
 canvas.save(OUT + "/A2_31점_비교.png")
 print("저장:", OUT + "/A2_31점_비교.png")
