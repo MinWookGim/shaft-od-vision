@@ -14,3 +14,6 @@ photos/
 !reports/발표/img/**
 !reports/발표/*.pdf
 reports/발표/타팀/
+
+# 각자 로컬 경로 설정 (experiments/*/paths_local.py)
+paths_local.py

@@ -1,13 +1,11 @@
 # 다겸님 제안(31개 점은 직선 위에 있어야 한다) + 희연님이 찾아준 원조 코드(Day026 line_fitting_measurement.py)를
 # 오늘 수정(margin+dia_basis=box)과 같이 써 봤을 때 어떻게 되는지 직접 확인.
-import sys
-sys.path.insert(0, "/home/gmw/data/Business/SmallManufacturer/2026/샤프트측정/experiments")
-import shaft_core as core
+from paths import load_core, photo_dir, A2_NAME
+core = load_core()
 import numpy as np
 from dataclasses import replace
 
-core.MODEL_PATH = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/models/demo_yolo11n_20260917.pt"
-DIR = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/photos/20260916_원전기계/"
+DIR = str(photo_dir()) + "/"
 
 def raw_points(path, p):
     """measure_roi 와 같은 절차로 31개 점의 (x, top_sub, bottom_sub) 원자료를 뽑는다. MAD 필터는 안 건다."""
@@ -58,7 +56,7 @@ def eval_line_fit(path, p, label):
 base = core.Params()
 fixed = replace(base, vertical_margin=0.05, dia_basis="box")
 
-SRC = DIR + "20260916_154320.jpg"  # A2
+SRC = DIR + A2_NAME  # A2
 print("=== A2, 원본 6008px ===")
 eval_line_fit(SRC, base,  "① 기본설정 + 라인피팅만(둘 다 안 바꿈)")
 eval_line_fit(SRC, fixed, "② margin+box 수정 + 라인피팅까지 추가")

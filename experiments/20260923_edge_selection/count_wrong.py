@@ -1,11 +1,9 @@
-import sys
-sys.path.insert(0, "/home/gmw/data/Business/SmallManufacturer/2026/샤프트측정/experiments")
-import shaft_core as core
+from paths import load_core, photo
+core = load_core()
 import numpy as np
 from dataclasses import replace
 
-core.MODEL_PATH = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/models/demo_yolo11n_20260917.pt"
-SRC = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/photos/20260916_원전기계/20260916_154320.jpg"
+SRC = str(photo())
 
 def points(path, p):
     img = core.imread(path); box, conf = core.detect_box(path)

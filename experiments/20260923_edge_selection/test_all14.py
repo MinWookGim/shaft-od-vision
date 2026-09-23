@@ -1,10 +1,8 @@
-import sys
-sys.path.insert(0, "/home/gmw/data/Business/SmallManufacturer/2026/샤프트측정/experiments")
-import shaft_core as core
+from paths import load_core, photo_dir
+core = load_core()
 from dataclasses import replace
 
-core.MODEL_PATH = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/models/demo_yolo11n_20260917.pt"
-DIR = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/photos/20260916_원전기계/"
+DIR = str(photo_dir()) + "/"
 files = [
     (1,"20260916_154318.jpg"),(2,"20260916_154320.jpg"),(3,"20260916_154321.jpg"),
     (4,"20260916_154322.jpg"),(5,"20260916_154324.jpg"),(6,"20260916_154325.jpg"),

@@ -1,17 +1,18 @@
 # 31개 측정점이 실제로 어디를 찍는지 원본 사진 위에 그려서 눈으로 보이게 한다.
 # measure_roi 와 완전히 같은 로직(같은 Params, 같은 MAD 필터)을 그대로 써서
 # 집계 숫자만 뽑지 않고 "점 하나하나의 좌표"까지 꺼낸다.
-import sys
-sys.path.insert(0, "/home/gmw/data/Business/SmallManufacturer/2026/샤프트측정/experiments")
-import shaft_core as core
+from paths import load_core, photo, IMG_OUT
+core = load_core()
 import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont
+import pathlib
 
-SRC = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/photos/20260916_원전기계/20260916_154320.jpg"
-MODEL = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/models/demo_yolo11n_20260917.pt"
-core.MODEL_PATH = MODEL
-OUT = "/tmp/claude-1000/-home-gmw-Documents-AIFFEL-Work/64e02336-4f92-45ac-aa5b-e4ff473f94d7/scratchpad/verify_31pt"
+import tempfile, os
+
+SRC = str(photo())
+OUT = IMG_OUT                                   # 최종 비교 이미지는 문서가 쓰는 폴더로 바로 저장
+WORK = pathlib.Path(tempfile.gettempdir())      # 중간 산출물(2992 축소본)은 임시 폴더에
 
 def measure_with_points(path, p=None):
     """measure_roi 와 같은 절차를 따르되, 31개 점 각각의 (x_abs, top_y_abs, bottom_y_abs, valid?) 를 같이 반환한다."""
@@ -87,8 +88,8 @@ print("원본:", "box", r_orig["box"], "conf", round(r_orig["conf"],2), "median"
 print(f"  31점 전체 std(이상치 포함) = {std_of(r_orig['pts'], False):.2f}px | 유효 {n_valid_o}/31 만의 std = {std_of(r_orig['pts'], True):.3f}px")
 
 # 2992 축소본
-small_path = OUT + "/a2_2992.jpg"
-if not __import__("os").path.exists(small_path):
+small_path = str(WORK / "a2_2992.jpg")
+if not os.path.exists(small_path):
     im0 = Image.open(SRC).convert("RGB"); w0,h0=im0.size; s=2992/max(w0,h0)
     im0.resize((round(w0*s), round(h0*s)), Image.LANCZOS).save(small_path, quality=95)
 r_small = measure_with_points(small_path)
@@ -131,5 +132,7 @@ d.text((col_w+gap+14,14), "2992px 축소", fill=(0,0,0), font=font)
 d.text((col_w+gap+14,64), f"유효 {n_valid_s}/31", fill=(0,0,0), font=font_s)
 d.text((col_w+gap+14,104), f"유효점만 std={std_of(r_small['pts'],True):.2f}px", fill=(0,0,0), font=font_s)
 d.text((14, head_h+target_h+20), "빨강=상단엣지  파랑=하단엣지  회색=이상치로 걸러진 점", fill=(60,60,60), font=font_s)
-canvas.save(OUT + "/A2_31점_비교.png")
-print("저장:", OUT + "/A2_31점_비교.png")
+out_path = OUT / "A2_31점_비교.png"
+out_path.parent.mkdir(parents=True, exist_ok=True)
+canvas.save(out_path)
+print("저장:", out_path)

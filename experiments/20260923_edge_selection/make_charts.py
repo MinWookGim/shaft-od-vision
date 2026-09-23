@@ -12,7 +12,9 @@ fm.fontManager.addfont(FONT_B)
 plt.rcParams["font.family"] = fm.FontProperties(fname=FONT_R).get_name()
 plt.rcParams["axes.unicode_minus"] = False
 
-OUT = "/home/gmw/Documents/AIFFEL_Work/shaft-od-vision/docs/images/20260923_edge_report"
+from paths import IMG_OUT
+
+OUT = str(IMG_OUT)          # 저장소 안 docs/images/20260923_edge_report
 os.makedirs(OUT, exist_ok=True)
 
 GOOD = "#1f8a52"

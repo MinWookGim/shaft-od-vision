@@ -1,15 +1,15 @@
 # A2(S01 2번째, 20260916_154320.jpg) 원본(6008) vs 2992 축소본에서
 # 31개 X 위치 측정의 "점간 산포"(std_pixel) 자체가 줄어드는지 직접 확인.
 # 대표값(median)만 보지 않고 shaft_core.measure_roi 가 반환하는 std_pixel 을 직접 본다.
-import sys
-sys.path.insert(0, "/home/gmw/data/Business/SmallManufacturer/2026/샤프트측정/experiments")
-import shaft_core as core
+from paths import load_core, photo
+core = load_core()
 from PIL import Image
+import tempfile
+from pathlib import Path
 import numpy as np
 
-SRC = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/photos/20260916_원전기계/20260916_154320.jpg"
-MODEL = "/home/gmw/Documents/AIFFEL_Work/_scratch/Pre365/field/models/demo_yolo11n_20260917.pt"
-core.MODEL_PATH = MODEL  # 09/16 구도에서 신뢰도 높은 재학습 모델 사용 (7월 best.pt 는 이 구도에서 검출 자체가 약함)
+SRC = str(photo())
+
 
 def run(path, label):
     img = core.imread(path)
@@ -28,7 +28,7 @@ print("=== A2 (시편1 2번째, 20260916_154320.jpg) ===")
 r_orig = run(SRC, "원본 6008px")
 
 # 2992 축소본 생성 (팀 파이프라인과 동일한 방식: LANCZOS, 긴 변 2992)
-small_path = "/tmp/claude-1000/-home-gmw-Documents-AIFFEL-Work/64e02336-4f92-45ac-aa5b-e4ff473f94d7/scratchpad/verify_31pt/a2_2992.jpg"
+small_path = str(Path(tempfile.gettempdir()) / "a2_2992.jpg")   # 중간 산출물이라 임시 폴더에
 im = Image.open(SRC).convert("RGB")
 w, h = im.size
 s = 2992 / max(w, h)
