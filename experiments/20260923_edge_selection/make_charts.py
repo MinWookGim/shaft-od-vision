@@ -158,3 +158,50 @@ fig.tight_layout()
 fig.savefig(f"{OUT}/chart5_two_clusters.png", facecolor="white")
 plt.close(fig)
 print(f"chart5: median={med_all:.1f} MAD={mad:.1f} sigma={sigma:.1f} band={lo:.0f}~{hi:.0f}")
+
+# ---------- 차트 6: 캘리브 걸고 실측과 대조 (희연님 요청) ----------
+import csv as _csv
+from paths import RESULT_OUT as _RES
+
+_rows = list(_csv.DictReader(open(_RES / "calib_s07_s10_px.csv", encoding="utf-8")))
+name = [r["시편"] for r in _rows]
+mpx = np.array([float(r["측정px"]) for r in _rows])
+amm = np.array([float(r["실측mm"]) for r in _rows])
+scale = 20.017 / mpx[name.index("S01")]          # 1점 캘리브(S01), mm/px
+pred = mpx * scale
+err_um = (pred - amm) * 1000
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 4.8), dpi=170)
+
+for ax, keep, title in [
+    (ax1, list(range(len(name))), "정상품 10개 전부"),
+    (ax2, [i for i, n in enumerate(name) if n not in ("S04", "S07")], "배치 영향 기록된 S04·S07 제외 (세로축 확대)"),
+]:
+    x, y, ns = amm[keep], err_um[keep], [name[i] for i in keep]
+    ax.axhspan(-10, 10, color=GOOD, alpha=0.12, zorder=1)      # 공차 반폭 +-10um
+    ax.axhspan(-3, 3, color=ACCENT, alpha=0.20, zorder=2)      # 희연님 기준 +-3um
+    ax.axhline(0, color=MUTED, lw=1, zorder=3)
+    ax.scatter(x, y, s=85, color=[BAD if n in ("S04", "S07") else ACCENT for n in ns], zorder=5)
+    for xi, yi, n in zip(x, y, ns):
+        ax.annotate(n, (xi, yi), xytext=(7, 5), textcoords="offset points", fontsize=9.5,
+                    color=BAD if n in ("S04", "S07") else INK, fontweight="bold")
+    ax.set_title(title, fontsize=12.5, color=INK, fontweight="bold")
+    ax.set_xlabel("계측기 실측값 (mm)", fontsize=10.5, color=INK)
+    ax.set_xticks([20.010, 20.015, 20.020, 20.025, 20.030])
+    ax.set_xticklabels(["20.010", "20.015", "20.020", "20.025", "20.030"])
+    ax.set_xlim(20.007, 20.034)
+    style(ax)
+
+ax1.set_ylabel("비전 측정 - 실측 (um)", fontsize=11, color=INK)
+ax2.set_ylabel("비전 측정 - 실측 (um)", fontsize=11, color=INK)
+ax1.annotate("S07 +543um\n(배치로 배율이 틀어진 시편)", xy=(20.0142, err_um[name.index("S07")]),
+             xytext=(20.0155, 400), fontsize=10, color=BAD, fontweight="bold",
+             arrowprops=dict(arrowstyle="->", color=BAD, lw=1.2))
+ax2.annotate("초록 띠 = 공차 반폭 +-10um\n파란 띠 = 희연님 기준 +-3um\n둘 다 점들이 벗어나 있다",
+             xy=(20.0175, 52), fontsize=10, color=MUTED)
+fig.suptitle("캘리브(S01~S06으로만 잡음) 걸고 실측과 대조 - 오차가 공차보다 크다",
+             fontsize=13.5, color=INK, fontweight="bold", y=1.02)
+fig.tight_layout()
+fig.savefig(f"{OUT}/chart6_calib_vs_actual.png", facecolor="white", bbox_inches="tight")
+plt.close(fig)
+print(f"chart6: 1점캘리브 {scale*1000:.4f}um/px, 오차 {err_um.min():+.0f}~{err_um.max():+.0f}um")
