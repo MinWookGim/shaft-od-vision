@@ -117,3 +117,42 @@ fig.savefig(f"{OUT}/chart4_linefit_crossshot.png", facecolor="white")
 plt.close(fig)
 
 print("saved:", os.listdir(OUT))
+
+# ---------- 차트 5: A2 기본설정 31개 측정선의 지름 분포 — 왜 시스템이 못 걸렀나 ----------
+dia = np.array([1156.4,1483.8,1155.2,1484.2,1483.3,1288.0,1286.5,1156.9,1158.3,1485.1,
+                1288.0,1485.7,1154.1,1154.1,1157.1,1484.4,1485.2,1397.8,1342.4,1157.5,
+                1342.6,1154.0,1485.6,1484.8,1156.9,1486.5,1156.1,1153.9,1385.9,1154.8,1154.5])
+wrong = np.array([0,1,0,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,0,1,0,0,1,0,0], dtype=bool)
+idx = np.arange(1, 32)
+med_all = np.median(dia)
+mad = np.median(np.abs(dia - med_all))
+sigma = 1.4826 * mad
+lo, hi = med_all - 3*sigma, med_all + 3*sigma
+
+fig, ax = plt.subplots(figsize=(11, 4.8), dpi=170)
+ax.axhspan(lo, hi, color=WARN, alpha=0.10, zorder=1)
+ax.axhline(lo, color=WARN, lw=1, ls=":", zorder=2)
+ax.axhline(hi, color=WARN, lw=1, ls=":", zorder=2)
+ax.axhline(1155.7, color=GOOD, lw=1.6, ls="--", zorder=2)
+ax.axhline(med_all, color=BAD, lw=1.8, zorder=2)
+ax.scatter(idx[~wrong], dia[~wrong], s=70, color=GOOD, zorder=4, label=f"실제 외곽을 잡은 점 ({(~wrong).sum()}개)")
+ax.scatter(idx[wrong], dia[wrong], s=70, color=BAD, marker="X", zorder=4, label=f"반사띠+배경을 잡은 점 ({wrong.sum()}개)")
+ax.annotate(f"이상치 허용 밴드 = 중앙값 ±3σ (σ는 MAD로 계산) = {lo:.0f} ~ {hi:.0f}px\n"
+            f"두 무리로 갈리는 바람에 밴드가 ±{3*sigma:.0f}px(약 ±10mm)까지 벌어져서, 31개가 전부 통과한다",
+            xy=(17, hi), xytext=(2.2, hi+60), fontsize=10.5, color=WARN,
+            arrowprops=dict(arrowstyle="->", color=WARN, lw=1.2))
+ax.annotate(f"시스템이 고른 대표값 {med_all:.1f}px — 오답이 과반이라 여기로 끌려간다",
+            xy=(24, med_all), xytext=(10.5, med_all+95), fontsize=10.5, color=BAD, fontweight="bold",
+            arrowprops=dict(arrowstyle="->", color=BAD, lw=1.2))
+ax.annotate("진짜 값 1155.7px", xy=(3.5, 1155.7), xytext=(3.2, 1155.7-170), fontsize=10.5,
+            color=GOOD, fontweight="bold", arrowprops=dict(arrowstyle="->", color=GOOD, lw=1.2))
+ax.set_xlabel("측정선 번호 (ROI 가로 방향 31개)", fontsize=11, color=INK)
+ax.set_ylabel("그 측정선이 잰 지름 (px)", fontsize=11, color=INK, labelpad=8)
+ax.set_title("A2 원본·기본설정 — 31개 측정선이 두 무리로 갈린다", fontsize=13.5, color=INK, fontweight="bold", pad=14)
+ax.set_xlim(0, 32); ax.set_ylim(600, 2050)
+ax.legend(frameon=False, fontsize=10.5, loc="lower left", ncol=2)
+style(ax)
+fig.tight_layout()
+fig.savefig(f"{OUT}/chart5_two_clusters.png", facecolor="white")
+plt.close(fig)
+print(f"chart5: median={med_all:.1f} MAD={mad:.1f} sigma={sigma:.1f} band={lo:.0f}~{hi:.0f}")
