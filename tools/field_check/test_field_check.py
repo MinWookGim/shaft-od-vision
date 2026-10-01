@@ -67,3 +67,13 @@ for sg in (1.5, 3.0, 6.0):
     check(f'번짐 폭 sigma={sg}', m['edge_px'], 2.563 * sg, 1.5)
     check(f'번짐 sigma={sg} 에서도 폭', m['width_px'], 500.0, 0.1)
 print('전체(6 포함):', '통과' if ok else '실패 있음')
+
+# 7) 핀 한쪽 테두리(반사) -> 경고가 떠야 하고, 깨끗한 핀은 안 떠야 한다
+from field_check import pin_unreliable
+clean = measure_width(synth(500.0, 250.0), cfg_pin, 'h')
+rim_img = synth(500.0, 250.0)
+rim_img[300:900, 1200:1212] = 150   # 핀 왼쪽 12px 를 중간 밝기 띠로 (집 사진의 테두리 흉내)
+rim = measure_width(rim_img, cfg_pin, 'h')
+print(f"깨끗: 좌우 {clean['edge1_px']:.1f}/{clean['edge2_px']:.1f} 경고 {pin_unreliable(clean)} | 테두리: 좌우 {rim['edge1_px']:.1f}/{rim['edge2_px']:.1f} 폭 {rim['width_px']:.1f} 경고 {pin_unreliable(rim)}")
+ok &= (not pin_unreliable(clean)) and pin_unreliable(rim)
+print('전체(7 포함):', '통과' if ok else '실패 있음')

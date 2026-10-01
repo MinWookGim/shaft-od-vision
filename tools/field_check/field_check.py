@@ -90,8 +90,8 @@ def edges_in_profile(prof):
         p_hi = cross(hi, start, -step, True)
         p_lo = cross(lo, start, step, False)
         return abs(p_hi - p_lo)
-    edge = (spread(bg1, i, 1) + spread(bg2, j, -1)) / 2.0
-    return top, bot, min(bg1, bg2), dark, edge
+    e1, e2 = spread(bg1, i, 1), spread(bg2, j, -1)
+    return top, bot, min(bg1, bg2), dark, (e1 + e2) / 2.0, e1, e2
 
 
 def measure_width(gray, roi, axis):
@@ -103,13 +103,15 @@ def measure_width(gray, roi, axis):
     sub = gray[y0:y1, x0:x1]
     if axis == 'h':
         sub = sub.T  # 가로 폭은 돌려서 세로 폭처럼 잰다
-    widths, tops, bots, contrast, idx, edges = [], [], [], [], [], []
+    widths, tops, bots, contrast, idx, edges, e1s, e2s = [], [], [], [], [], [], [], []
     for c in range(sub.shape[1]):
         r = edges_in_profile(sub[:, c])
         if r is None:
             continue
-        top, bot, bg, dark, edge = r
+        top, bot, bg, dark, edge, e1, e2 = r
         edges.append(edge)
+        e1s.append(e1)
+        e2s.append(e2)
         widths.append(bot - top)
         tops.append(top)
         bots.append(bot)
@@ -125,9 +127,21 @@ def measure_width(gray, roi, axis):
         'n_total': sub.shape[1],
         'contrast': float(np.median(contrast)),
         'edge_px': float(np.median(edges)),   # 경계 번짐 폭 중앙값
+        'edge1_px': float(np.median(e1s)),    # 위(가로면 왼쪽) 경계 번짐
+        'edge2_px': float(np.median(e2s)),    # 아래(가로면 오른쪽) 경계 번짐
         'tops': np.array(tops), 'bots': np.array(bots), 'idx': idx,
         'widths': w,
     }
+
+
+def pin_unreliable(m):
+    """핀 절대 폭을 믿기 어려운지. A4(변화만 봄)는 괜찮지만 A5(절대 크기)는 흔들린다.
+    10-01 집 사진: 연마된 핀 옆면이 넓은 백라이트를 반사해 한쪽에 밝은 테두리가 생겼다
+    -> 그쪽 경계만 넓게 번지고(17.7 vs 4.8px), 줄마다 폭이 1% 넘게 흔들렸다."""
+    lo, hi = sorted([m['edge1_px'], m['edge2_px']])
+    asym = hi > 1.5 * lo and hi - lo > 3          # 한쪽만 1.5배 넘게 번짐
+    uneven = m['sd_px'] > 0.005 * m['width_px']   # 줄마다 0.5% 넘게 흔들림
+    return asym or uneven
 
 
 def saturation_ratio(gray, roi):
@@ -241,6 +255,8 @@ def check(cfg_path, paths):
                 print(f"   ! {key}: 경계를 찾은 줄이 {m['n_lines']}/{m['n_total']} 뿐 -> ROI 안에 받침·그림자·끝부분이 섞였는지 확인")
             # 줄마다 폭이 0.5% 넘게 흔들리면 경계가 일정하지 않다는 뜻
             # (10-01 집 사진: 세운 핀 옆면의 회색 반사 띠 때문에 핀 폭이 줄마다 246~254px -> sd 1.2%)
+            if key == 'pin' and m and pin_unreliable(m):
+                print(f"   ! pin: 좌우 경계 번짐 {m['edge1_px']:.1f} / {m['edge2_px']:.1f}px -> 테두리(반사)·흐림 의심. A4 는 써도 되지만 A5(절대 크기) 판정은 참고만")
             if m and m['sd_px'] > 0.005 * m['width_px']:
                 print(f"   ! {key}: 줄마다 폭 흔들림 {m['sd_px']:.2f}px ({m['sd_px']/m['width_px']*100:.2f}%) -> 경계그림에서 반사 띠·테이퍼 끝·먼지 확인, ROI 를 고른 구간으로 좁히기")
 
@@ -280,7 +296,7 @@ def check(cfg_path, paths):
     if true_shaft and pins:
         pin_mm = cfg.get('pin_mm', 10.0)
         D = cfg.get('D_mm', 400.0)
-        print(f"\n[A5] 실측 {true_shaft:.3f}mm, 핀 {pin_mm:.3f}mm, D={D:.0f}mm (겉보기 과대 보정 포함), 허용 0.1%")
+        print(f"\n[A5] 실측 {true_shaft:.3f}mm, 핀 {pin_mm:.3f}mm, D={D:.0f}mm (겉보기 과대 보정 포함), 허용 {cfg.get('a5_tol_pct', 0.1)}%")
         for n, r, _, _ in rows:
             if not (r.get('pin') and r.get('shaft')):
                 continue
@@ -288,8 +304,12 @@ def check(cfg_path, paths):
             shaft_seen = r['shaft']['width_px'] * mm_per_px              # 샤프트의 '보이는' 지름
             shaft_est = shaft_seen - (true_shaft / 2) ** 3 / D ** 2       # 보이는 지름에서 과대분을 뺀다
             d = (shaft_est - true_shaft) / true_shaft * 100
-            if abs(d) <= 0.1:
+            tol = cfg.get('a5_tol_pct', 0.1)
+            if abs(d) <= tol:
                 flag = '통과'
+            elif pin_unreliable(r['pin']):
+                # 핀 경계가 고르지 않으면 차이가 깊이 때문인지 테두리 때문인지 모른다 -> 핀을 옮기라고 하지 않는다
+                flag = '초과(핀 경계 고르지 않음 -> 이동 안내 생략, 캘리퍼스 깊이 맞춤을 믿고 진행·값만 기록)'
             else:
                 # 환산이 크다 = 핀이 작게 보인다 = 핀이 샤프트보다 멀다 -> 핀을 카메라 쪽으로
                 move = abs(d) / 100 * D
