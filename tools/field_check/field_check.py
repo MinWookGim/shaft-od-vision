@@ -42,12 +42,15 @@ def edges_in_profile(prof):
     below = np.where(prof < (bg0 + dark) / 2.0)[0]
     if len(below) == 0:
         return None
-    # 문턱 아래 구간이 여러 덩어리면(끝에 걸린 다른 물체 등) 가장 긴 덩어리를 물체로 본다
+    # 문턱 아래 구간이 여러 덩어리일 수 있다.
+    #  - ROI 끝에 닿은 덩어리 = 끝에 걸린 다른 물체 -> 버린다
+    #  - 나머지는 처음~끝을 하나로 본다. 물체 앞면 반사 줄이 실루엣을 두 덩어리로 쪼개도
+    #    바깥 경계는 그대로 잡히게 (10-01 집 사진: 불 켠 사진에서 반사 줄이 위쪽 경계로 잡혔음)
     cuts = np.where(np.diff(below) > 1)[0] + 1
-    runs = np.split(below, cuts)
-    below = max(runs, key=len)
-    if below[0] < 3 or below[-1] > n - 4:
+    runs = [r for r in np.split(below, cuts) if r[0] >= 3 and r[-1] <= n - 4]
+    if not runs:
         return None  # 물체가 ROI 끝에 닿음 -> ROI 를 더 넓게 잡아야 함
+    below = np.arange(runs[0][0], runs[-1][-1] + 1)
     # 2단계: 배경 밝기를 경계 '바로 바깥'에서 위·아래 따로 잰다.
     # ROI 끝에서 재면 끝에 걸린 다른 물체(10-01 집 사진: 핀 ROI 에 걸린 샤프트 끝)에 문턱이 끌려간다
     w = max(3, min(k, 40))
@@ -70,7 +73,25 @@ def edges_in_profile(prof):
     # 소수점 보정: 문턱을 지나는 두 px 사이를 직선으로 이어 정확한 위치를 구한다
     top = (i - 1) + (prof[i - 1] - t1) / (prof[i - 1] - prof[i])
     bot = j + (prof[j] - t2) / (prof[j] - prof[j + 1])
-    return top, bot, min(bg1, bg2), dark
+    # 경계 번짐 폭: 밝기가 배경 쪽 90% 에서 물체 쪽 10% 까지 바뀌는 데 걸리는 px 수 (작을수록 선명)
+    def cross(level, start, step, want_above):
+        """start 에서 step 방향으로 걸어가며 밝기가 level 을 처음 넘는 소수점 위치."""
+        a = start
+        while 0 < a < n - 1:
+            nxt = a + step
+            if (prof[nxt] >= level) == want_above and (prof[a] >= level) != want_above:
+                return a + step * (level - prof[a]) / (prof[nxt] - prof[a])
+            a = nxt
+        return float(a)
+    def spread(bg, start, step):
+        hi = dark + 0.9 * (bg - dark)
+        lo = dark + 0.1 * (bg - dark)
+        # 경계 지점에서 배경 쪽(-step)으로 90% 를 넘는 곳, 물체 쪽(+step)으로 10% 아래로 가는 곳
+        p_hi = cross(hi, start, -step, True)
+        p_lo = cross(lo, start, step, False)
+        return abs(p_hi - p_lo)
+    edge = (spread(bg1, i, 1) + spread(bg2, j, -1)) / 2.0
+    return top, bot, min(bg1, bg2), dark, edge
 
 
 def measure_width(gray, roi, axis):
@@ -82,12 +103,13 @@ def measure_width(gray, roi, axis):
     sub = gray[y0:y1, x0:x1]
     if axis == 'h':
         sub = sub.T  # 가로 폭은 돌려서 세로 폭처럼 잰다
-    widths, tops, bots, contrast, idx = [], [], [], [], []
+    widths, tops, bots, contrast, idx, edges = [], [], [], [], [], []
     for c in range(sub.shape[1]):
         r = edges_in_profile(sub[:, c])
         if r is None:
             continue
-        top, bot, bg, dark = r
+        top, bot, bg, dark, edge = r
+        edges.append(edge)
         widths.append(bot - top)
         tops.append(top)
         bots.append(bot)
@@ -102,6 +124,7 @@ def measure_width(gray, roi, axis):
         'n_lines': len(w),
         'n_total': sub.shape[1],
         'contrast': float(np.median(contrast)),
+        'edge_px': float(np.median(edges)),   # 경계 번짐 폭 중앙값
         'tops': np.array(tops), 'bots': np.array(bots), 'idx': idx,
         'widths': w,
     }
@@ -203,10 +226,10 @@ def check(cfg_path, paths):
 
     # --- 사진별 표 ---
     print()
-    print(f"{'사진':<24}{'샤프트px':>10}{'(sd)':>7}{'핀px':>10}{'(sd)':>7}{'포화%':>7}{'대비':>6}  경계그림")
+    print(f"{'사진':<24}{'샤프트px':>10}{'(sd)':>7}{'번짐':>6}{'핀px':>10}{'(sd)':>7}{'포화%':>7}{'대비':>6}  경계그림")
     for name, res, sat, out in rows:
         s, q = res.get('shaft'), res.get('pin')
-        sv = f"{s['width_px']:10.2f}{s['sd_px']:7.2f}" if s else f"{'못찾음':>10}{'':>7}"
+        sv = f"{s['width_px']:10.2f}{s['sd_px']:7.2f}{s['edge_px']:6.1f}" if s else f"{'못찾음':>10}{'':>13}"
         qv = f"{q['width_px']:10.2f}{q['sd_px']:7.2f}" if q else f"{'못찾음':>10}{'':>7}"
         tv = f"{sat*100:7.2f}" if sat is not None else f"{'-':>7}"
         cv = f"{s['contrast']:6.0f}" if s else f"{'-':>6}"
@@ -237,6 +260,20 @@ def check(cfg_path, paths):
             print(f"   {n:<24}{v:10.2f}px  {d:+7.3f}%  {flag}")
         spread = (max(v for _, v in pins) - min(v for _, v in pins)) / ref * 100
         print(f"   최대-최소 차이 {spread:.3f}%")
+
+    # --- 묶음 요약: 여러 장일 때 장간 흔들림을 µm 로 (줌·해상도가 달라도 비교되게) ---
+    both = [r for _, r, _, _ in rows if r.get('shaft') and r.get('pin')]
+    if len(both) >= 2:
+        pin_mm = cfg.get('pin_mm', 10.0)
+        um_px = np.mean([pin_mm * 1000 / r['pin']['width_px'] for r in both])   # 핀으로 잰 px 하나의 크기
+        sh = np.array([r['shaft']['width_px'] for r in both])
+        ed = np.array([r['shaft']['edge_px'] for r in both])
+        # 핀으로 환산한 샤프트 지름(장마다) -> 그 흔들림이 '측정값' 흔들림
+        dia = np.array([r['shaft']['width_px'] * pin_mm / r['pin']['width_px'] for r in both])
+        print(f"\n[묶음 요약] {len(both)}장, px 하나 = {um_px:.1f}µm (핀 기준)")
+        print(f"   샤프트 px 장간 sd   {sh.std(ddof=1):.3f}px = {sh.std(ddof=1)*um_px:.2f}µm")
+        print(f"   핀 환산 지름 장간 sd {dia.std(ddof=1)*1000:.2f}µm  (평균 {dia.mean():.4f}mm)")
+        print(f"   샤프트 경계 번짐   {ed.mean():.1f}px = {ed.mean()*um_px:.0f}µm")
 
     # --- A5: 핀으로 환산한 샤프트 지름 vs 실측 ---
     true_shaft = cfg.get('true_shaft_mm')

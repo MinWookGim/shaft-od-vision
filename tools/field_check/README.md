@@ -16,7 +16,7 @@ conda run -n aiffel python field_check.py check site.json 사진.jpg [사진2.jp
 | 단계 | 넣을 사진 | 볼 것 |
 |---|---|---|
 | A1 | 백라이트만 | 포화 % (1% 넘으면 경고) |
-| A3 | 차광 후 1장 | 사진_check.jpg 에서 점이 실루엣 가장자리에 붙었나, sd 경고 없나, 샤프트 px 400 이상 |
+| A3 | 차광 후 1장 | 사진_check.jpg 에서 점이 실루엣 가장자리에 붙었나, sd 경고 없나, 샤프트 px 400 이상, 번짐(px) 확인 |
 | A4 | 연속 3장 한꺼번에 | [A4] 표 — 첫 장 대비 0.1% 이내 |
 | A5 | "중" 시편 | site.json 에 `true_shaft_mm` 실측값 -> [A5] 환산·핀 이동 안내 |
 | 블록 B~ | 시편마다 1장 | site.json 에 `ref_pin_px`(A4 기준값) 적어 두면 매번 기준 대비 % |

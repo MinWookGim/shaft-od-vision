@@ -60,3 +60,10 @@ out = subprocess.run([sys.executable, os.path.join(sys.path[0], 'field_check.py'
                       f'{d}/syn_a5.png', f'{d}/syn_a5_far.png'], capture_output=True, text=True).stdout
 print(out)
 print('전체:', '통과' if ok else '실패 있음')
+
+# 6) 경계 번짐 폭: 가우시안 흐림 sigma 의 10-90% 폭 이론값 = 2.563 * sigma
+for sg in (1.5, 3.0, 6.0):
+    m = measure_width(synth(500.0, 250.0, blur=sg), cfg_shaft, 'v')
+    check(f'번짐 폭 sigma={sg}', m['edge_px'], 2.563 * sg, 1.5)
+    check(f'번짐 sigma={sg} 에서도 폭', m['width_px'], 500.0, 0.1)
+print('전체(6 포함):', '통과' if ok else '실패 있음')
