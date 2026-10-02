@@ -160,10 +160,19 @@ def apparent(d_mm, D_mm):
     return d_mm + r ** 3 / D_mm ** 2
 
 
+def _out_path(path, suffix, out_dir):
+    """결과 그림 경로. out_dir 를 주면 사진 폴더를 어지럽히지 않고 거기에 모은다."""
+    base = os.path.splitext(os.path.basename(path))[0] + suffix
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+        return os.path.join(out_dir, base)
+    return os.path.splitext(path)[0] + suffix
+
+
 # ---------------------------------------------------------------
 # 3. 좌표 눈금 그림 (ROI 정할 때 쓰는 것)
 # ---------------------------------------------------------------
-def make_grid(path):
+def make_grid(path, out_dir=None):
     img = cv2.imread(path)
     H, W = img.shape[:2]
     s = 2000.0 / max(H, W)  # 화면에서 보기 좋게 긴 변 2000px 로 줄인다
@@ -181,15 +190,16 @@ def make_grid(path):
         cv2.line(small, (0, Y), (small.shape[1], Y), col, 1)
         if y % 1000 == 0:
             cv2.putText(small, str(y), (2, Y - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.4, col, 1)
-    out = os.path.splitext(path)[0] + '_grid.jpg'
+    out = _out_path(path, '_grid.jpg', out_dir)
     cv2.imwrite(out, small)
     print(f'원본 크기 {W} x {H}, 눈금 500px 간격 -> {out}')
+    return out
 
 
 # ---------------------------------------------------------------
 # 4. 확인 (본 기능)
 # ---------------------------------------------------------------
-def draw_check(path, gray, cfg, res):
+def draw_check(path, gray, cfg, res, out_dir=None):
     """ROI 주변을 원본 해상도로 잘라 찾은 경계를 그린다.
     전체 사진을 줄이면 경계선이 1px 도 안 돼서 안 보이므로, 칸마다 확대 크롭을 옆으로 붙인다."""
     tiles = []
@@ -215,13 +225,13 @@ def draw_check(path, gray, cfg, res):
         # 크롭 높이를 600px 로 맞춰서 나란히 붙인다
         s = 600.0 / crop.shape[0]
         tiles.append(cv2.resize(crop, None, fx=s, fy=s, interpolation=cv2.INTER_NEAREST if s > 1 else cv2.INTER_AREA))
-    out = os.path.splitext(path)[0] + '_check.jpg'
+    out = _out_path(path, '_check.jpg', out_dir)
     if tiles:
         cv2.imwrite(out, np.hstack(tiles))
     return out
 
 
-def check(cfg_path, paths):
+def check(cfg_path, paths, out_dir=None):
     cfg = json.load(open(cfg_path, encoding='utf-8'))
     rows = []
     for p in paths:
@@ -235,7 +245,7 @@ def check(cfg_path, paths):
         if 'pin' in cfg:
             res['pin'] = measure_width(gray, cfg['pin']['roi'], cfg['pin'].get('axis', 'h'))
         sat = saturation_ratio(gray, cfg['bg']['roi']) if 'bg' in cfg else None
-        out = draw_check(p, gray, cfg, res)
+        out = draw_check(p, gray, cfg, res, out_dir)
         rows.append((os.path.basename(p), res, sat, out))
 
     # --- 사진별 표 ---
@@ -317,6 +327,39 @@ def check(cfg_path, paths):
                 flag = f'★초과 -> 핀을 약 {move:.1f}mm {way}'
             print(f"   {n:<24}환산 {shaft_est:8.4f}mm  {d:+7.3f}%  {flag}")
 
+    # --- 판정: 표를 다 읽지 않아도 되게 한 줄로 ---
+    stop, notes = [], []
+    lo, hi = cfg.get('shaft_px_range', [350, 650])   # 400mm·200MP 에서 지름 20mm 는 약 500px
+    for name, res, sat, out in rows:
+        sm, pm = res.get('shaft'), res.get('pin')
+        if sm is None:
+            stop.append(f'{name}: 샤프트 못 찾음 -> 좌표·차광 확인')
+            continue
+        if not (lo <= sm['width_px'] <= hi):
+            stop.append(f'{name}: 샤프트 {sm["width_px"]:.0f}px 가 예상({lo}~{hi})과 다름 -> 좌표가 다른 물체에 잡혔거나 거리가 다름')
+        if sm['n_lines'] < 0.9 * sm['n_total'] or sm['sd_px'] > 0.005 * sm['width_px']:
+            stop.append(f'{name}: 샤프트 경계 고르지 않음 -> 차광·초점 확인')
+        if sat is not None and sat > 0.01:
+            stop.append(f'{name}: 배경 포화 {sat*100:.1f}% -> 백라이트 밝기 낮추기')
+        if pm is None:
+            notes.append(f'{name}: 핀 못 찾음 (폰 움직임 감시 불가)')
+        elif pin_unreliable(pm):
+            notes.append('핀 테두리 경고 -> A5 는 참고만')
+    if len(pins) >= 2 or (pins and cfg.get('ref_pin_px')):
+        ref = cfg.get('ref_pin_px') or pins[0][1]
+        moved = [n for n, v in pins if abs(v - ref) / ref * 100 > 0.1]
+        if moved:
+            stop.append(f'핀 px 0.1% 넘게 변함({", ".join(moved)}) -> 폰·거치대·초점 점검')
+    notes = list(dict.fromkeys(notes))   # 같은 말 한 번만
+    ok = not stop
+    print("\n==============================")
+    print("판정: " + ("진행 OK" if ok else "다시 세팅"))
+    for m in stop:
+        print("  X " + m)
+    for m in notes:
+        print("  - " + m)
+    print("==============================")
+    return {'ok': ok, 'stop': stop, 'notes': notes}
 
 if __name__ == '__main__':
     if len(sys.argv) >= 3 and sys.argv[1] == 'grid':
