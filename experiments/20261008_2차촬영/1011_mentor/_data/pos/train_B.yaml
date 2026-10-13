@@ -1,0 +1,6 @@
+path: <작업폴더>/1011_mentor/pos/../_data/pos
+train: images/B
+val: images/A
+names:
+  0: land
+  1: pin

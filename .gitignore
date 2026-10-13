@@ -17,3 +17,7 @@ reports/발표/타팀/
 
 # 각자 로컬 경로 설정 (experiments/*/paths_local.py)
 paths_local.py
+
+# 10-08 분석 폴더는 그림·캐시·가중치까지 통째로 공유 (회의용, 10-13)
+!experiments/20261008_2차촬영/**
+experiments/20261008_2차촬영/**/__pycache__/

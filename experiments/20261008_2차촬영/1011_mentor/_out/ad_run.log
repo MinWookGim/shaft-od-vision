@@ -1,0 +1,77 @@
+[넓게_148um A] epoch 0 loss 21.9940
+[넓게_148um A] epoch 50 loss 4.1805
+[넓게_148um A] epoch 100 loss 2.4890
+[넓게_148um A] epoch 150 loss 1.9519
+[넓게_148um A] epoch 200 loss 1.6862
+[넓게_148um A] epoch 250 loss 1.5482
+[넓게_148um A] epoch 299 loss 1.4507
+[넓게_148um A] notch 0.1mm AUC 0.554 위치 0/50
+[넓게_148um A] notch 0.2mm AUC 0.659 위치 0/50
+[넓게_148um A] notch 0.5mm AUC 0.792 위치 5/50
+[넓게_148um A] notch 1.0mm AUC 0.999 위치 46/50
+[넓게_148um A] burr 0.1mm AUC 0.572 위치 0/50
+[넓게_148um A] burr 0.2mm AUC 0.751 위치 19/50
+[넓게_148um A] burr 0.5mm AUC 0.967 위치 45/50
+[넓게_148um A] burr 1.0mm AUC 1.000 위치 50/50
+[넓게_148um A] scratch 0.05mm AUC 0.649 위치 0/50
+[넓게_148um A] scratch 0.1mm AUC 0.728 위치 2/50
+[넓게_148um A] scratch 0.2mm AUC 0.820 위치 7/50
+[넓게_148um A] T1 NG AUC 0.281  T2 {'fold': 'A', 'auc_F3_vs_F12': 0.495}
+[넓게_148um B] epoch 0 loss 21.1496
+[넓게_148um B] epoch 50 loss 4.4639
+[넓게_148um B] epoch 100 loss 2.7939
+[넓게_148um B] epoch 150 loss 2.1560
+[넓게_148um B] epoch 200 loss 1.8962
+[넓게_148um B] epoch 250 loss 1.7620
+[넓게_148um B] epoch 299 loss 1.6585
+[넓게_148um B] notch 0.1mm AUC 0.540 위치 0/60
+[넓게_148um B] notch 0.2mm AUC 0.650 위치 2/60
+[넓게_148um B] notch 0.5mm AUC 0.851 위치 13/60
+[넓게_148um B] notch 1.0mm AUC 0.998 위치 44/60
+[넓게_148um B] burr 0.1mm AUC 0.557 위치 0/60
+[넓게_148um B] burr 0.2mm AUC 0.787 위치 33/60
+[넓게_148um B] burr 0.5mm AUC 0.963 위치 55/60
+[넓게_148um B] burr 1.0mm AUC 1.000 위치 58/60
+[넓게_148um B] scratch 0.05mm AUC 0.702 위치 4/60
+[넓게_148um B] scratch 0.1mm AUC 0.802 위치 5/60
+[넓게_148um B] scratch 0.2mm AUC 0.861 위치 23/60
+[넓게_148um B] T1 NG AUC 0.407  T2 {'fold': 'B', 'auc_F3_vs_F12': 0.246}
+[좁게_74um A] epoch 0 loss 20.4183
+[좁게_74um A] epoch 50 loss 3.7164
+[좁게_74um A] epoch 100 loss 2.4058
+[좁게_74um A] epoch 150 loss 1.9819
+[좁게_74um A] epoch 200 loss 1.7935
+[좁게_74um A] epoch 250 loss 1.6263
+[좁게_74um A] epoch 299 loss 1.5731
+[좁게_74um A] notch 0.1mm AUC 0.594 위치 2/50
+[좁게_74um A] notch 0.2mm AUC 0.760 위치 17/50
+[좁게_74um A] notch 0.5mm AUC 0.965 위치 40/50
+[좁게_74um A] notch 1.0mm AUC 1.000 위치 50/50
+[좁게_74um A] burr 0.1mm AUC 0.773 위치 32/50
+[좁게_74um A] burr 0.2mm AUC 0.918 위치 49/50
+[좁게_74um A] burr 0.5mm AUC 1.000 위치 50/50
+[좁게_74um A] burr 1.0mm AUC 1.000 위치 50/50
+[좁게_74um A] scratch 0.05mm AUC 0.828 위치 1/50
+[좁게_74um A] scratch 0.1mm AUC 0.871 위치 0/50
+[좁게_74um A] scratch 0.2mm AUC 0.929 위치 4/50
+[좁게_74um A] T1 NG AUC 0.585  T2 {'fold': 'A', 'auc_F3_vs_F12': 0.763}
+[좁게_74um B] epoch 0 loss 20.2696
+[좁게_74um B] epoch 50 loss 3.9832
+[좁게_74um B] epoch 100 loss 2.6402
+[좁게_74um B] epoch 150 loss 2.1379
+[좁게_74um B] epoch 200 loss 1.9211
+[좁게_74um B] epoch 250 loss 1.8069
+[좁게_74um B] epoch 299 loss 1.6676
+[좁게_74um B] notch 0.1mm AUC 0.576 위치 2/60
+[좁게_74um B] notch 0.2mm AUC 0.708 위치 8/60
+[좁게_74um B] notch 0.5mm AUC 0.908 위치 25/60
+[좁게_74um B] notch 1.0mm AUC 0.999 위치 41/60
+[좁게_74um B] burr 0.1mm AUC 0.715 위치 29/60
+[좁게_74um B] burr 0.2mm AUC 0.858 위치 51/60
+[좁게_74um B] burr 0.5mm AUC 0.998 위치 56/60
+[좁게_74um B] burr 1.0mm AUC 1.000 위치 51/60
+[좁게_74um B] scratch 0.05mm AUC 0.808 위치 2/60
+[좁게_74um B] scratch 0.1mm AUC 0.866 위치 0/60
+[좁게_74um B] scratch 0.2mm AUC 0.905 위치 26/60
+[좁게_74um B] T1 NG AUC 0.517  T2 {'fold': 'B', 'auc_F3_vs_F12': 0.363}
+done
