@@ -77,3 +77,22 @@ rim = measure_width(rim_img, cfg_pin, 'h')
 print(f"깨끗: 좌우 {clean['edge1_px']:.1f}/{clean['edge2_px']:.1f} 경고 {pin_unreliable(clean)} | 테두리: 좌우 {rim['edge1_px']:.1f}/{rim['edge2_px']:.1f} 폭 {rim['width_px']:.1f} 경고 {pin_unreliable(rim)}")
 ok &= (not pin_unreliable(clean)) and pin_unreliable(rim)
 print('전체(7 포함):', '통과' if ok else '실패 있음')
+
+# 8) 경계 단면: 깨끗한 샤프트는 위·아래 모두 단 1개 + 깨끗함, 아래에 연한 띠 + 바깥 단을 넣으면 걸려야 한다
+#    (10-08 사진의 아래 경계: 샤프트 안쪽이 배경의 0.3 정도로 밝은 띠, 경계 바깥에 0.85 선반)
+from field_check import edge_profiles, bottom_clean
+def synth_band(bg=230, dark=40, blur=1.5):
+    big = np.full((H * SS, W * SS), bg, np.float32)
+    big[400 * SS:900 * SS, 100 * SS:900 * SS] = dark                               # 샤프트 400~900
+    big[875 * SS:900 * SS, 100 * SS:900 * SS] = dark + 0.3 * (bg - dark)            # 아래 안쪽 25px 연한 띠
+    big[900 * SS:906 * SS, 100 * SS:900 * SS] = dark + 0.85 * (bg - dark)           # 아래 바깥 6px 선반
+    img = cv2.GaussianBlur(cv2.resize(big, (W, H), interpolation=cv2.INTER_AREA), (0, 0), blur)
+    return np.clip(img, 0, 255).astype(np.uint8)
+for name, img, want in (('깨끗', synth(500.0, 250.0, blur=1.5), True), ('아래 띠+단', synth_band(), False)):
+    m = measure_width(img, cfg_shaft, 'v')
+    pr = edge_profiles(img, cfg_shaft, m)
+    t, b = pr['top'], pr['bot']
+    good = bottom_clean(pr) == want and t['steps'] == 1 and (b['steps'] == 1) == want
+    ok &= good
+    print(f"{'OK ' if good else 'NG '} 경계 단면 {name}: 위 폭 {t['width']:.0f} 단 {t['steps']} / 아래 폭 {b['width']:.0f} 단 {b['steps']} -> 깨끗함 {bottom_clean(pr)} (정답 {want})")
+print('전체(8 포함):', '통과' if ok else '실패 있음')

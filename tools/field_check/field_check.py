@@ -134,6 +134,100 @@ def measure_width(gray, roi, axis):
     }
 
 
+def edge_profiles(gray, roi, m, half=60):
+    """샤프트 위·아래 경계의 밝기 단면을 줄마다 50% 경계에 맞춰 겹친 뒤 중앙값을 낸다.
+    가로축 d = 경계에서 떨어진 px. d<0 물체 안쪽, d>0 배경 쪽. 위·아래를 같은 방향으로 맞춰 나란히 비교한다.
+    10-08 사진: 위는 절벽 하나, 아래는 연한 띠 + 여러 단(1012_edgecheck). 3차 촬영에서 아래 가림이 먹혔는지 현장에서 보려는 것."""
+    x0, x1, y0, y1 = roi
+    sub = gray[y0:y1, x0:x1].astype(np.float64)
+    n = sub.shape[0]
+    ys = np.arange(n)
+    d = np.arange(-half, half + 1, dtype=np.float64)
+    tops, bots, darks = [], [], []
+    for c, t, b in zip(m['idx'], m['tops'], m['bots']):
+        col = sub[:, c]
+        # 소수점 경계 위치에 맞춰 보간한다. 위 경계의 바깥은 위쪽(y 감소), 아래 경계의 바깥은 아래쪽(y 증가)
+        tops.append(np.interp(t - d, ys, col, left=np.nan, right=np.nan))
+        bots.append(np.interp(b + d, ys, col, left=np.nan, right=np.nan))
+        # 물체 밝기 = 샤프트 가운데 30% 의 중앙값
+        mid, q = (t + b) / 2.0, 0.15 * (b - t)
+        darks.append(np.median(col[int(mid - q):int(mid + q) + 1]))
+    dark = float(np.median(darks))
+    out = {'d': d, 'dark': dark}
+    for key, arr in (('top', tops), ('bot', bots)):
+        prof = np.nanmedian(np.array(arr), axis=0)
+        bg = np.nanpercentile(prof[d > 0], 90)
+        p = (prof - dark) / (bg - dark)          # 물체 0, 배경 1 로 맞춘다
+        out[key] = edge_shape(d, p)
+        out[key]['p'] = p
+    return out
+
+
+def edge_shape(d, p):
+    """맞춘 단면 p(물체 0, 배경 1)에서 경계 모양 숫자.
+    width = 경계(d=0)에서 안쪽으로 10% 아래, 바깥으로 90% 위가 되는 곳까지의 거리(px). 넓을수록 번짐
+    steps = 그 구간에서 밝기가 가파르게 오르는 곳(기울기 봉우리)의 수. 깨끗한 경계면 1"""
+    ok = ~np.isnan(p)
+    inner = np.where(ok & (d <= 0) & (p <= 0.1))[0]
+    outer = np.where(ok & (d >= 0) & (p >= 0.9))[0]
+    lo = d[inner[-1]] if len(inner) else d[ok][0]      # 못 찾으면 창 끝 = '그보다 넓음'
+    hi = d[outer[0]] if len(outer) else d[ok][-1]
+    seg = (d >= lo) & (d <= hi) & ok
+    g = np.convolve(np.nan_to_num(np.diff(p)), np.ones(3) / 3, mode='same')  # 이웃 3px 로 다듬은 기울기
+    gd = (d[:-1] + d[1:]) / 2.0
+    gs = np.where(seg[:-1] & seg[1:], g, 0.0)
+    top = gs.max() if gs.size else 0.0
+    # 봉우리 = 이웃보다 크고 가장 큰 기울기의 25% 이상. 두 봉우리 사이 골이 작은 봉우리의 절반 아래로 꺼져야 따로 센다
+    peaks = [i for i in range(1, len(gs) - 1) if gs[i] >= 0.25 * top and gs[i] >= gs[i - 1] and gs[i] > gs[i + 1]]
+    kept = []
+    for i in peaks:
+        if kept and gs[kept[-1] + 1:i].min(initial=np.inf) > 0.5 * min(gs[kept[-1]], gs[i]):
+            if gs[i] > gs[kept[-1]]:
+                kept[-1] = i
+            continue
+        kept.append(i)
+    return {'width': float(hi - lo), 'lo': float(lo), 'hi': float(hi), 'steps': len(kept),
+            'peaks': [float(gd[i]) for i in kept],
+            'found': bool(len(inner) and len(outer))}
+
+
+def bottom_clean(prof, ratio=2.0, slack=2.0):
+    """아래 경계가 위 경계처럼 깨끗한가. 봉우리 하나 + 폭이 위의 ratio 배 + slack px 안"""
+    t, b = prof['top'], prof['bot']
+    return b['found'] and b['steps'] == 1 and b['width'] <= ratio * t['width'] + slack
+
+
+def draw_profile(path, prof, out_dir=None, clean=None):
+    """위·아래 경계 단면을 한 그림에 겹친다. 위(파랑)가 절벽 하나인데 아래(빨강)가 계단이면 아래 빛이 샌다"""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    plt.rcParams['font.family'] = 'NanumGothic'
+    plt.rcParams['axes.unicode_minus'] = False
+    fig, ax = plt.subplots(figsize=(7, 3.6))
+    for key, col, name in (('top', 'tab:blue', '샤프트 위'), ('bot', 'tab:red', '샤프트 아래')):
+        e = prof[key]
+        ax.plot(prof['d'], e['p'], color=col, lw=1.4,
+                label=f"{name}: 폭 {e['width']:.1f}px{'' if e['found'] else ' 이상'}, 단 {e['steps']}개")
+        for x in e['peaks']:
+            ax.axvline(x, color=col, lw=0.8, ls=':')
+    for y in (0.1, 0.5, 0.9):
+        ax.axhline(y, color='gray', lw=0.6, ls='--')
+    ax.axvline(0, color='k', lw=0.6)
+    ax.set_xlabel('경계(50%)에서 떨어진 px   (왼쪽 = 샤프트 안, 오른쪽 = 배경)')
+    ax.set_ylabel('밝기 (샤프트 0, 배경 1)')
+    ax.set_ylim(-0.1, 1.15)
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=8, loc='upper left')
+    ok = bottom_clean(prof) if clean is None else clean
+    ax.set_title(f"{os.path.basename(path)} — 아래 경계 {'깨끗함' if ok else '여러 단/넓음 -> 아래 가림 확인'}", fontsize=9)
+    fig.tight_layout()
+    out = _out_path(path, '_profile.png', out_dir)
+    fig.savefig(out, dpi=110)
+    plt.close(fig)
+    return out
+
+
 def pin_unreliable(m):
     """핀 절대 폭을 믿기 어려운지. A4(변화만 봄)는 괜찮지만 A5(절대 크기)는 흔들린다.
     10-01 집 사진: 연마된 핀 옆면이 넓은 백라이트를 반사해 한쪽에 밝은 테두리가 생겼다
@@ -246,6 +340,11 @@ def check(cfg_path, paths, out_dir=None):
             res['pin'] = measure_width(gray, cfg['pin']['roi'], cfg['pin'].get('axis', 'h'))
         sat = saturation_ratio(gray, cfg['bg']['roi']) if 'bg' in cfg else None
         out = draw_check(p, gray, cfg, res, out_dir)
+        # 샤프트 위·아래 경계 단면 (아래 가림이 먹혔는지)
+        if res['shaft'] is not None:
+            res['profile'] = edge_profiles(gray, cfg['shaft']['roi'], res['shaft'], cfg.get('profile_half_px', 60))
+            res['profile_png'] = draw_profile(p, res['profile'], out_dir,
+                                              bottom_clean(res['profile'], *cfg.get('bottom_clean', [2.0, 2.0])))
         rows.append((os.path.basename(p), res, sat, out))
 
     # --- 사진별 표 ---
@@ -269,6 +368,17 @@ def check(cfg_path, paths, out_dir=None):
                 print(f"   ! pin: 좌우 경계 번짐 {m['edge1_px']:.1f} / {m['edge2_px']:.1f}px -> 테두리(반사)·흐림 의심. A4 는 써도 되지만 A5(절대 크기) 판정은 참고만")
             if m and m['sd_px'] > 0.005 * m['width_px']:
                 print(f"   ! {key}: 줄마다 폭 흔들림 {m['sd_px']:.2f}px ({m['sd_px']/m['width_px']*100:.2f}%) -> 경계그림에서 반사 띠·테이퍼 끝·먼지 확인, ROI 를 고른 구간으로 좁히기")
+
+    # --- 경계 단면: 위는 절벽 하나여야 하고, 아래도 위처럼 되어야 한다 (3차 촬영 시나리오 2단계) ---
+    profs = [(n, r['profile']) for n, r, _, _ in rows if r.get('profile')]
+    if profs:
+        print(f"\n[경계 단면] 폭 = 안쪽 10%~바깥 90% 거리(px), 단 = 가파르게 오르는 곳 수. 그림: 사진_profile.png")
+        print(f"{'사진':<24}{'위 폭':>7}{'위 단':>6}{'아래 폭':>8}{'아래 단':>7}  판정")
+        for n, pr in profs:
+            t, b = pr['top'], pr['bot']
+            bw = f"{b['width']:.0f}" + ('' if b['found'] else '+')
+            verdict = '깨끗함' if bottom_clean(pr, *cfg.get('bottom_clean', [2.0, 2.0])) else '★아래 여러 단/넓음'
+            print(f"{n:<24}{t['width']:7.0f}{t['steps']:6d}{bw:>8}{b['steps']:7d}  {verdict}")
 
     if 'bg' in cfg:
         for name, res, sat, out in rows:
@@ -341,6 +451,10 @@ def check(cfg_path, paths, out_dir=None):
             stop.append(f'{name}: 샤프트 경계 고르지 않음 -> 차광·초점 확인')
         if sat is not None and sat > 0.01:
             stop.append(f'{name}: 배경 포화 {sat*100:.1f}% -> 백라이트 밝기 낮추기')
+        pr = res.get('profile')
+        if pr and not bottom_clean(pr, *cfg.get('bottom_clean', [2.0, 2.0])):
+            b, t = pr['bot'], pr['top']
+            stop.append(f'{name}: 샤프트 아래 경계 단 {b["steps"]}개, 폭 {b["width"]:.0f}px (위 {t["width"]:.0f}px) -> 아래 빛 가림 확인')
         if pm is None:
             notes.append(f'{name}: 핀 못 찾음 (폰 움직임 감시 불가)')
         elif pin_unreliable(pm):
