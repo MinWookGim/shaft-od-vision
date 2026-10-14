@@ -21,3 +21,15 @@ paths_local.py
 # 10-08 분석 폴더는 그림·캐시·가중치까지 통째로 공유 (회의용, 10-13)
 !experiments/20261008_2차촬영/**
 experiments/20261008_2차촬영/**/__pycache__/
+
+# 라즈베리파이·텔레센트릭 검토 문서: 팀에서 진행하지 않기로 해 로컬에만 둔다 (10-14)
+docs/2026-10-06_텔레센트릭_*.md
+docs/2026-10-07_Pi_텔레센트릭_구축계획.md
+docs/2026-10-07_렌즈비교_Coolens_vs_Edmund.md
+docs/2026-10-08_거울꺾기_구성검토.md
+docs/2026-10-08_부품_추적_정리.md
+docs/2026-10-09_라즈베리파이_구매근거.md
+reports/텔레센트릭_조사_20260917.md
+tools/pi_capture/
+docs/images/20261007_rig/
+docs/images/20261008_fold/
