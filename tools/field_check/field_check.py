@@ -439,7 +439,9 @@ def check(cfg_path, paths, out_dir=None):
 
     # --- 판정: 표를 다 읽지 않아도 되게 한 줄로 ---
     stop, notes = [], []
-    lo, hi = cfg.get('shaft_px_range', [350, 650])   # 400mm·200MP 에서 지름 20mm 는 약 500px
+    # 400mm·200MP 에서 지름 20mm 는 약 500px. 거리가 바뀌면 px 는 거리에 반비례하니 범위도 같이 옮긴다
+    k = 400.0 / cfg.get('D_mm', 400)
+    lo, hi = cfg.get('shaft_px_range', [round(350 * k), round(650 * k)])
     for name, res, sat, out in rows:
         sm, pm = res.get('shaft'), res.get('pin')
         if sm is None:
