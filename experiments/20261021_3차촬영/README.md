@@ -5,7 +5,7 @@
 - 사진 원본(2억 화소 190장)과 V3 오버레이 그림은 빠져 있다. csv·npz를 읽는 스크립트(`analyze.py`, `grr.py`, `drift_removed.py`, `axial_ana.py`, `noblack_ana.py`, `burst.py`, `pp_check.py`)는 바로 다시 돌릴 수 있다
 - 사진 경로는 `../../field/photos/20261021_원전기계/3차_261021`(원본)과 `3차_261021_분류`(사용 190장을 단계·시편 폴더로 나눈 것) 기준으로 적혀 있다(작업 폴더 기준)
 - `run_v3_d20.py`는 선행 V3 엔진(`measurement_engine_EDGE_V3_REFLECTION.py`)을 `../../build/demo/hy_system/measurement`에서 불러온다
-- `fig_mentor.py`, `fig_mentor_v2.py`는 그림을 `../../ETC/261023/`에 저장한다. 문서에 쓴 그림은 `docs/images/20261021_3차/`에 복사해 두었다
+- `fig_mentor.py`, `fig_mentor_v2.py`는 그림을 `../../ETC/261023/`에 저장한다. 문서에 쓴 그림은 `docs/images/20261021_3rd/`에 복사해 두었다
 
 ## 50% 경계 두 가지 (중요)
 - **처음 방식**(`run_v3_d20.py`의 `tb`, `pin_motion.py`): 측정 창 끝 10% 평균을 바깥 밝기로 쓴다. 암막 사진은 창 맨 위가 어두운 띠라서 위 경계를 바닥 쪽에서 잡는 결함이 있다. 결과는 `v3_d20.csv`의 `p50_px`·`pin_px`, `pin_motion.csv`, `ana_p50.txt`, `grr.txt`, `drift_removed_old.txt`, `pp_check.txt`, `burst.txt`
