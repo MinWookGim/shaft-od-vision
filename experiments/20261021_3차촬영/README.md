@@ -7,8 +7,11 @@
 - `run_v3_d20.py`는 선행 V3 엔진(`measurement_engine_EDGE_V3_REFLECTION.py`)을 `../../build/demo/hy_system/measurement`에서 불러온다
 - `fig_mentor.py`, `fig_mentor_v2.py`는 그림을 `../../ETC/261023/`에 저장한다. 문서에 쓴 그림은 `docs/images/20261021_3rd/`에 복사해 두었다
 
+## 방향 주의
+- 사진은 EXIF 방향 3(180도)이다. 코드는 원본 픽셀 배열을 그대로 쓰므로 코드 안의 위·아래(`pin_top`, `sh_top`, "창 맨 위" 등)는 실제와 반대다. 문서와 `fig_photos.py` 그림은 실제 방향으로 적었다
+
 ## 50% 경계 두 가지 (중요)
-- **처음 방식**(`run_v3_d20.py`의 `tb`, `pin_motion.py`): 측정 창 끝 10% 평균을 바깥 밝기로 쓴다. 암막 사진은 창 맨 위가 어두운 띠라서 위 경계를 바닥 쪽에서 잡는 결함이 있다. 결과는 `v3_d20.csv`의 `p50_px`·`pin_px`, `pin_motion.csv`, `ana_p50.txt`, `grr.txt`, `drift_removed_old.txt`, `pp_check.txt`, `burst.txt`
+- **처음 방식**(`run_v3_d20.py`의 `tb`, `pin_motion.py`): 측정 창 끝 10% 평균을 바깥 밝기로 쓴다. 암막 사진은 창 맨 아래(원본 좌표로는 맨 위)가 어두운 띠라서 아래 경계를 바닥 쪽에서 잡는 결함이 있다. 결과는 `v3_d20.csv`의 `p50_px`·`pin_px`, `pin_motion.csv`, `ana_p50.txt`, `grr.txt`, `drift_removed_old.txt`, `pp_check.txt`, `burst.txt`
 - **국소 50%**(`local_edges.py`): 경계 바로 바깥 20 \~ 60px와 안쪽 10 \~ 30px의 밝기 중간값. 문서의 50% 숫자는 이쪽이다. 결과는 `local_edges.csv`, 그리고 이 값을 `p50_px`·`pin_px` 자리에 넣은 `v3_d20_local.csv`
   - `SRC=v3_d20_local.csv python analyze.py p50_px`처럼 환경변수로 입력을 바꿔 `analyze.py`·`grr.py`·`drift_removed.py`를 돌렸다 -> `ana_local.txt`, `grr_local.txt`, `drift_removed_local.txt`
 - V3 엔진 값(`v3_px`)은 이 문제와 무관하다(사전 규칙 판정)
@@ -26,7 +29,7 @@
 | `axial_profile_local.py`, `axial_ana.py` | Ø20 단 안 측정 위치에 따른 지름 -> `axial_profile_local.npz`, `axial_ana.txt`, `axial_profile.png` | 6절 |
 | `noblack_ana.py` | 암막 없음 40장 시간 변화·반복성, 두 경계 방식 비교 | 3·7절 |
 | `fig_mentor.py`, `fig_mentor_v2.py` | 멘토링 그림(v2 = 국소 50%) | 3·5절 |
-| `fig_photos.py` | 실제 사진 그림 5장(사진 전체, Ø20 단 확대, 창 맨 위 어두운 띠, 핀 경계 단면 앞/뒤, 암막 vs 암막 없음). 원본 사진이 있어야 돌아간다 | 1·3·7·9절 |
+| `fig_photos.py` | 실제 사진 그림 5장(사진 전체, Ø20 단 확대, 창 맨 아래 어두운 띠, 핀 경계 단면 앞/뒤, 암막 vs 암막 없음). 원본 사진이 있어야 돌아간다 | 1·3·7·9절 |
 
 ## 고쳤던 실수
 - 처음 V3 상자를 끝단(약 Ø16.7, x 8900 \~ 9900)에 잡았다. 핀/구간 비율이 맞지 않아 발견하고 Ø20 단으로 바로잡았다

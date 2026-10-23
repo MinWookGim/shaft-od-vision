@@ -12,7 +12,7 @@ l = pd.read_csv('local_edges.csv').merge(pd.read_csv('v3_d20.csv')[['file', 'pin
 l['no'] = l['no'].str[2:].astype(int); l['t'] = pd.to_datetime(l.file.str[:15], format='%Y%m%d_%H%M%S')
 l = l[(l.stage < 3) & ~((l.stage == 1) & (l.no == 1))].sort_values('t')
 fig, ax = plt.subplots(figsize=(9, 4.4))
-for col, c, lb in [('pin_px', '#999999', '기존 방식 (위 경계를 어두운 바닥 쪽에서 잡음, 결함)'), ('pin', '#1f5fa8', '국소 50% 방식 (경계 바로 안팎 밝기의 중간)')]:
+for col, c, lb in [('pin_px', '#999999', '기존 방식 (아래 경계를 어두운 바닥 쪽에서 잡음, 결함)'), ('pin', '#1f5fa8', '국소 50% 방식 (경계 바로 안팎 밝기의 중간)')]:
     ref = l[(l.stage == 1) & (l.no == 2)][col].mean()
     for st, mk in [(1, 'o'), (2, 's')]:
         s = l[l.stage == st]
