@@ -22,5 +22,5 @@ ax.axvline(1.0, color=RED, lw=1.6); ax.text(1.1, -1.05, '요구: 측정 1회 σ 
 ax.set_xlim(0, 11.4); ax.set_ylim(5.6, -1.3); ax.axis('off')
 for xv in [2, 4, 6, 8, 10]: ax.axvline(xv, color=GRID, lw=0.8, zorder=0, ymin=0.05, ymax=0.83)
 fig.text(0.02, 0.12, '오른쪽 회색 = 다음 시스템의 대응. 겹치는 기준값을 빼고 합치면 약 12µm(요구의 12배)', fontsize=9, color=MUTED)
-fig.text(0.02, 0.05, '원인·병목 아님: 표면 거칠기 · 화소 수 · 대표값 선택 · 실측값 학습 모델', fontsize=9.5, color=INK)
+fig.text(0.02, 0.05, '원인 아님: 표면 거칠기 · 화소 수     바꿔도 기준선 못 넘음: 대표값 · 실측값 학습 모델', fontsize=9.5, color=INK)
 fig.savefig('fig_budget_report.png', dpi=170); print('ok')

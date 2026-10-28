@@ -29,8 +29,8 @@ ax.grid(axis='x', color=GRID, lw=0.8); ax.set_axisbelow(True); ax.tick_params(co
 fig.text(0.02, 0.965, '오차 예산: 무엇이 몇 µm씩 판정을 막았나 (3차 촬영)', fontsize=14, color=INK, weight='bold', va='top')
 fig.text(0.02, 0.91, '모두 같은 틀(가장 잡음이 작은 경계, 물리 배율, 정상 시편 9개)에서 측정. 겹치는 기준값을 빼고 합치면 약 12µm로 요구의 약 12배',
          fontsize=9.5, color=MUTED, va='top')
-fig.text(0.02, 0.15, '원인·병목이 아니었던 것', fontsize=10, color=INK, weight='bold')
-fig.text(0.02, 0.095, '표면 거칠기 (세 분석 모두 원인으로 지지하는 결과 없음)  ·  화소 수 (2배 축소해도 오차 같음)  ·  대표값 선택 (어느 후보도 기준선 못 넘음)  ·  실측값 학습 모델 (8개 변형 모두 개선 없음)',
+fig.text(0.02, 0.15, '원인이 아니었던 것 · 바꿔도 기준선을 못 넘은 것', fontsize=10, color=INK, weight='bold')
+fig.text(0.02, 0.095, '표면 거칠기 (세 분석 모두 원인으로 지지하는 결과 없음)  ·  화소 수 (2배 축소해도 오차 같음)  ·  대표값 선택 (열 평균이 가장 가깝지만 기준선 못 넘음)  ·  실측값 학습 모델 (8개 변형 모두 개선 없음)',
          fontsize=9, color=MUTED)
 fig.text(0.02, 0.035, '흐림 변화는 18분 동안 한 방향으로 흐른 양을 균일 분포의 1σ(폭/√12)로 바꾼 값이다. 기준값 잡음은 오차 RMSE에서 거꾸로 구한 상한이라 위 치우침에 이미 들어 있다.',
          fontsize=8, color=MUTED)
