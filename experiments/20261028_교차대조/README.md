@@ -9,3 +9,5 @@
 - `edge_width.py`: 핀·샤프트 경계 10~90% 폭과 밝기 -> `edge_width.csv` (④)
 - `fig_timeline.py`: 그림 -> `docs/images/20261028_cross/fig_timeline.png`
 - 정리: `docs/05_meetings/2026-10-28_교차대조.md`
+- `fig_budget.py`, `fig_budget_report.py`: 오차 예산 그림(문서용 / 보고서 8장 카드용)
+- `notion_figs.py`: 팀 노션 공유용 그림 5장 -> `docs/images/20261028_cross/fig1 ~ fig5`
